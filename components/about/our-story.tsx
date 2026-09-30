@@ -1,205 +1,205 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useRef } from "react"
+import Image from "next/image"
+import { motion, useInView, useScroll, useSpring } from "framer-motion"
 
 const timelineSteps = [
   {
-    year: "2015",
-    title: "Founded in Dhaka",
-    description: "Started with a vision to transform interior design in Bangladesh.",
-    image: "/modern-office-building-dhaka-bangladesh.jpg",
+    year: "2022",
+    title: "The Foundation",
+    description: "Established in Dhaka with a vision to bring contemporary interior design and refined spatial experiences to modern living.",
+    image: "/storytimeline/First Office.jpeg",
   },
   {
-    year: "2017",
-    title: "First Residential Project",
-    description: "Completed our first major residential interior transformation.",
-    image: "/luxury-residential-interior-living-room.jpg",
-  },
-  {
-    year: "2019",
-    title: "Commercial Expansion",
-    description: "Expanded services to include commercial and corporate interiors.",
-    image: "/modern-commercial-office.png",
-  },
-  {
-    year: "2021",
-    title: "Team Growth",
-    description: "Grew to a team of 20+ experts in design and execution.",
-    image: "/creative-design-team.png",
+    year: "2023",
+    title: "First Flagship Residence",
+    description: "Completed our first signature luxury apartment project, setting a new benchmark for tailor-made residential interiors.",
+    image: "/storytimeline/First Project.jpeg",
   },
   {
     year: "2024",
-    title: "100+ Projects",
-    description: "Celebrated completing over 100 successful projects.",
-    image: "/beautiful-modern-kitchen-interior-design.jpg",
+    title: "Commercial Vanguard",
+    description: "Diversified into high-end retail boutiques, corporate offices, and lifestyle hospitality spaces across the city.",
+    image: "/storytimeline/First Commercial Project.jpeg",
+  },
+  {
+    year: "2025",
+    title: "Design & Engineering Synergy",
+    description: "Expanded into a full-service team of 15+ architects, interior specialists, and project managers delivering end-to-end execution.",
+    image: "/storytimeline/Meeting Table.jpeg",
+  },
+  {
+    year: "2026",
+    title: "50+ Masterpieces Delivered",
+    description: "Celebrated the successful completion of over 50 residential and commercial transformations across Bangladesh.",
+    image: "/storytimeline/50 Project Done.jpeg",
   },
 ]
 
 export function OurStory() {
-  const [activeIndex, setActiveIndex] = useState(-1)
-  const [progress, setProgress] = useState(0)
-  const sectionRef = useRef<HTMLElement>(null)
-  const itemRefs = useRef<(HTMLDivElement | null)[]>([])
+  const containerRef = useRef<HTMLElement>(null)
+  const isHeaderInView = useInView(containerRef, { once: true })
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!sectionRef.current) return
+  // Scroll progress for vertical timeline line
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start 70%", "end 60%"],
+  })
 
-      const section = sectionRef.current
-      const sectionTop = section.offsetTop
-      const sectionHeight = section.offsetHeight
-      const scrollY = window.scrollY
-      const windowHeight = window.innerHeight
-
-      // Calculate progress through the section
-      const startTrigger = sectionTop - windowHeight * 0.5
-      const endTrigger = sectionTop + sectionHeight - windowHeight * 0.5
-      const scrollProgress = Math.max(0, Math.min(1, (scrollY - startTrigger) / (endTrigger - startTrigger)))
-      setProgress(scrollProgress * 100)
-
-      // Check each timeline item
-      itemRefs.current.forEach((item, index) => {
-        if (!item) return
-        const rect = item.getBoundingClientRect()
-        const itemCenter = rect.top + rect.height / 2
-
-        if (itemCenter < windowHeight * 0.7) {
-          setActiveIndex((prev) => Math.max(prev, index))
-        }
-      })
-    }
-
-    window.addEventListener("scroll", handleScroll)
-    handleScroll() // Initial check
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+  const scaleY = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001,
+  })
 
   return (
-    <section ref={sectionRef} className="py-24 bg-white overflow-hidden">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center mb-20">
-          <span className="inline-block text-[#a57c00] text-sm tracking-[0.2em] uppercase font-medium mb-4">
+    <section ref={containerRef} className="relative overflow-hidden bg-white py-20 lg:py-28">
+      {/* Top golden gradient accent */}
+      <div className="pointer-events-none absolute left-1/2 top-0 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-[#c89f2f]/30 to-transparent" />
+
+      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10 xl:px-16">
+        
+        {/* ── Section Header ── */}
+        <div className="mx-auto mb-20 max-w-2xl text-center">
+          <motion.span
+            initial={{ opacity: 0, y: 12 }}
+            animate={isHeaderInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5 }}
+            className="mb-2 block text-xs font-semibold uppercase tracking-[0.3em] text-[#c89f2f] sm:text-sm"
+          >
             Our Journey
-          </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-light text-[#1a3a2f] mb-6 text-balance">Our Story</h2>
-          <p className="text-[#4a4a4a] max-w-2xl mx-auto leading-relaxed text-pretty">
-            From humble beginnings to becoming a leading interior design studio, our journey has been marked by passion,
-            creativity, and commitment.
-          </p>
+          </motion.span>
+          <motion.h2
+            initial={{ opacity: 0, y: 16 }}
+            animate={isHeaderInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="font-serif text-3xl font-light leading-tight text-neutral-900 sm:text-4xl lg:text-5xl"
+          >
+            Five Years of <span className="italic text-[#c89f2f]">Defining Spaces</span>
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={isHeaderInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mt-4 text-sm leading-relaxed text-neutral-600 sm:text-base"
+          >
+            From our humble beginnings in Dhaka to executing over 50+ bespoke transformations, our story is driven by innovation, precision, and timeless craftsmanship.
+          </motion.p>
         </div>
 
-        {/* Timeline */}
-        <div className="relative">
-          {/* Animated Progress Line - Desktop */}
-          <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-[#e5e5e5] hidden lg:block -translate-x-1/2">
-            <div
-              className="absolute top-0 left-0 w-full bg-gradient-to-b from-[#a57c00] to-[#1a3a2f] transition-all duration-500 ease-out"
-              style={{ height: `${progress}%` }}
+        {/* ── Animated Vertical Timeline ── */}
+        <div className="relative mx-auto max-w-5xl">
+          
+          {/* Timeline Center Line (Desktop) */}
+          <div className="absolute left-1/2 top-0 hidden h-full w-0.5 -translate-x-1/2 bg-neutral-200 lg:block">
+            <motion.div
+              style={{ scaleY }}
+              className="h-full w-full origin-top bg-gradient-to-b from-[#c89f2f] via-[#c89f2f] to-[#0a0a0a]"
             />
           </div>
 
-          {/* Mobile Progress Line */}
-          <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-[#e5e5e5] lg:hidden">
-            <div
-              className="absolute top-0 left-0 w-full bg-gradient-to-b from-[#a57c00] to-[#1a3a2f] transition-all duration-500 ease-out"
-              style={{ height: `${progress}%` }}
+          {/* Timeline Left Line (Mobile/Tablet) */}
+          <div className="absolute left-6 top-0 h-full w-0.5 bg-neutral-200 lg:hidden">
+            <motion.div
+              style={{ scaleY }}
+              className="h-full w-full origin-top bg-gradient-to-b from-[#c89f2f] via-[#c89f2f] to-[#0a0a0a]"
             />
           </div>
 
           {/* Timeline Items */}
           <div className="space-y-16 lg:space-y-24">
             {timelineSteps.map((step, index) => {
-              const isActive = index <= activeIndex
               const isEven = index % 2 === 0
-
               return (
-                <div
-                  key={step.year}
-                  ref={(el) => {
-                    itemRefs.current[index] = el
-                  }}
-                  className={`relative lg:flex lg:items-center transition-all duration-700 ${isEven ? "lg:flex-row" : "lg:flex-row-reverse"
-                    }`}
-                >
-                  {/* Content Card */}
-                  <div
-                    className={`pl-16 lg:pl-0 lg:w-1/2 transition-all duration-700 delay-200 ${isEven ? "lg:pr-20 lg:text-right" : "lg:pl-20"
-                      } ${isActive ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
-                  >
-                    <div
-                      className={`bg-[#f5f4f0] rounded-2xl p-8 relative overflow-hidden group hover:shadow-xl transition-shadow duration-500 ${isActive ? "animate-in slide-in-from-bottom-4 duration-700" : ""
-                        }`}
-                    >
-                      {/* Decorative corner */}
-                      <div
-                        className={`absolute top-0 ${isEven ? "right-0" : "left-0"} w-24 h-24 bg-[#a57c00]/10 rounded-bl-full transition-transform duration-500 group-hover:scale-150`}
-                      />
-
-                      {/* Year badge */}
-                      <div className={`inline-flex items-center gap-2 mb-4 ${isEven ? "lg:flex-row-reverse" : ""}`}>
-                        <span className="text-[#a57c00] font-bold text-3xl lg:text-4xl">{step.year}</span>
-                        <div className="w-8 h-0.5 bg-[#a57c00]" />
-                      </div>
-
-                      <h3 className="text-xl lg:text-2xl font-serif font-light text-[#1a3a2f] mb-3">{step.title}</h3>
-                      <p className="text-[#6a6a6a] leading-relaxed">{step.description}</p>
-                    </div>
-                  </div>
-
-                  {/* Center Circle/Node */}
-                  <div
-                    className={`absolute left-6 lg:left-1/2 lg:-translate-x-1/2 top-8 lg:top-1/2 lg:-translate-y-1/2 z-10 transition-all duration-500 ${isActive ? "scale-100" : "scale-0"
-                      }`}
-                  >
-                    <div className="relative">
-                      {/* Pulse ring */}
-                      <div
-                        className={`absolute inset-0 rounded-full bg-[#a57c00] transition-all duration-1000 ${isActive ? "animate-ping opacity-30" : "opacity-0"
-                          }`}
-                        style={{ animationDuration: "2s" }}
-                      />
-
-                      {/* Main circle */}
-                      <div
-                        className={`w-5 h-5 lg:w-6 lg:h-6 rounded-full border-4 border-white shadow-lg transition-all duration-500 ${isActive ? "bg-[#a57c00]" : "bg-[#e5e5e5]"
-                          }`}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Image */}
-                  <div
-                    className={`pl-16 lg:pl-0 lg:w-1/2 mt-6 lg:mt-0 transition-all duration-700 delay-300 ${isEven ? "lg:pl-20" : "lg:pr-20"
-                      } ${isActive ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
-                  >
-                    <div className="rounded-2xl overflow-hidden aspect-[4/3] shadow-lg group">
-                      <img
-                        src={step.image || "/placeholder.svg"}
-                        alt={step.title}
-                        className={`w-full h-full object-cover transition-transform duration-700 ${isActive ? "scale-100 group-hover:scale-110" : "scale-110"
-                          }`}
-                      />
-                    </div>
-                  </div>
-                </div>
+                <TimelineCard key={step.year} step={step} index={index} isEven={isEven} />
               )
             })}
           </div>
 
-          {/* End marker */}
-          <div className="flex justify-center mt-16">
-            <div
-              className={`transition-all duration-700 ${activeIndex >= timelineSteps.length - 1 ? "opacity-100 scale-100" : "opacity-0 scale-0"}`}
-            >
-              <div className="flex flex-col items-center gap-3">
-                <div className="w-3 h-3 rounded-full bg-[#1a3a2f]" />
-                <span className="text-sm text-[#a57c00] tracking-wider uppercase font-medium">And counting...</span>
-              </div>
-            </div>
-          </div>
         </div>
+
+        {/* Bottom divider line */}
+        <div className="mt-20 h-px w-full bg-gradient-to-r from-transparent via-neutral-200 to-transparent" />
       </div>
     </section>
+  )
+}
+
+function TimelineCard({
+  step,
+  index,
+  isEven,
+}: {
+  step: { year: string; title: string; description: string; image: string }
+  index: number
+  isEven: boolean
+}) {
+  const cardRef = useRef<HTMLDivElement>(null)
+  const isInView = useInView(cardRef, { once: true, margin: "-100px" })
+
+  return (
+    <div
+      ref={cardRef}
+      className={`relative flex flex-col pl-14 lg:pl-0 lg:flex-row lg:items-center ${
+        isEven ? "lg:flex-row" : "lg:flex-row-reverse"
+      }`}
+    >
+      {/* Content Side */}
+      <motion.div
+        initial={{ opacity: 0, x: isEven ? -40 : 40 }}
+        animate={isInView ? { opacity: 1, x: 0 } : {}}
+        transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
+        className={`w-full lg:w-1/2 ${isEven ? "lg:pr-16 lg:text-right" : "lg:pl-16 lg:text-left"}`}
+      >
+        <div className="group rounded-2xl border border-neutral-200/80 bg-neutral-50/50 p-6 transition-all duration-500 hover:-translate-y-1 hover:border-[#c89f2f] hover:bg-white hover:shadow-xl lg:p-8">
+          {/* Year */}
+          <span className="font-serif text-3xl font-light text-[#c89f2f] sm:text-4xl">
+            {step.year}
+          </span>
+
+          {/* Title */}
+          <h3 className="mt-2 font-serif text-xl font-medium text-neutral-900 lg:text-2xl">
+            {step.title}
+          </h3>
+
+          {/* Description */}
+          <p className="mt-3 text-sm leading-relaxed text-neutral-600 sm:text-base">
+            {step.description}
+          </p>
+        </div>
+      </motion.div>
+
+      {/* Center Node / Bullet Point */}
+      <motion.div
+        initial={{ scale: 0, opacity: 0 }}
+        animate={isInView ? { scale: 1, opacity: 1 } : {}}
+        transition={{ duration: 0.4, delay: 0.2 }}
+        className="absolute left-6 top-8 -translate-x-1/2 lg:left-1/2 lg:top-1/2 lg:-translate-y-1/2 z-20"
+      >
+        <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-neutral-900 shadow-md transition-colors duration-300">
+          <div className="h-3 w-3 rounded-full bg-[#c89f2f]" />
+        </div>
+      </motion.div>
+
+      {/* Image Side */}
+      <motion.div
+        initial={{ opacity: 0, x: isEven ? 40 : -40 }}
+        animate={isInView ? { opacity: 1, x: 0 } : {}}
+        transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
+        className={`mt-6 w-full lg:mt-0 lg:w-1/2 ${isEven ? "lg:pl-16" : "lg:pr-16"}`}
+      >
+        <div className="group relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-neutral-200/80 shadow-md">
+          <Image
+            src={step.image}
+            alt={step.title}
+            fill
+            sizes="(max-width: 1024px) 100vw, 45vw"
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+        </div>
+      </motion.div>
+    </div>
   )
 }

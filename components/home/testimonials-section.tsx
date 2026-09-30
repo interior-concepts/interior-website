@@ -2,6 +2,7 @@
 
 import { Quote } from "lucide-react"
 import { useEffect, useRef } from "react"
+import Image from "next/image"
 
 const testimonials = [
   {
@@ -157,9 +158,13 @@ export function TestimonialsSection() {
             key={index}
             className="flex-shrink-0 w-80 md:w-96 p-6 bg-white/90 backdrop-blur-md rounded-lg shadow-lg text-center"
           >
-            <img
+            <Image
               src={t.image}
-              alt={t.author}
+              alt={`${t.author} testimonial project photo`}
+              width={640}
+              height={384}
+              sizes="(max-width: 768px) 320px, 384px"
+              loading="lazy"
               className="w-full h-48 object-cover object-top rounded-lg mb-4"
             />
 

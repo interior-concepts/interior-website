@@ -1,15 +1,45 @@
 "use client"
 
 import { useEffect, useRef } from "react"
+import Image from "next/image"
+import { motion } from "framer-motion"
 
 const partners = [
-  { name: "Bosch", logo: "/bosch-brand-logo-simple.jpg" },
-  { name: "Hettich", logo: "/hettich-logo-brand.png" },
-  { name: "Hafele", logo: "/hafele-logo-brand.png" },
-  { name: "Blum", logo: "/Blum-logo-brand.webp" },
-  { name: "Siemens", logo: "/siemens.png" },
-  { name: "Greenlam", logo: "/Greenlam-Logo-brand.png" },
-  { name: "Asian Paints", logo: "/asianpaints-logo-brand.webp" },
+  {
+    name: "Bosch",
+    logo: "/bosch-brand-logo-simple.jpg",
+    category: "Home Appliances",
+  },
+  {
+    name: "Hettich",
+    logo: "/hettich-logo-brand.png",
+    category: "German Hardware",
+  },
+  {
+    name: "Hafele",
+    logo: "/hafele-logo-brand.png",
+    category: "Architectural Fittings",
+  },
+  {
+    name: "Blum",
+    logo: "/Blum-logo-brand.webp",
+    category: "Lift & Runner Systems",
+  },
+  {
+    name: "Siemens",
+    logo: "/siemens.png",
+    category: "Smart Built-in Tech",
+  },
+  {
+    name: "Greenlam",
+    logo: "/Greenlam-Logo-brand.png",
+    category: "Decorative Laminates",
+  },
+  {
+    name: "Asian Paints",
+    logo: "/asianpaints-logo-brand.webp",
+    category: "Premium Finishes",
+  },
 ]
 
 export function PartnersSection() {
@@ -34,7 +64,6 @@ export function PartnersSection() {
 
     animationId = requestAnimationFrame(animate)
 
-    // Pause on hover
     const handleMouseEnter = () => cancelAnimationFrame(animationId)
     const handleMouseLeave = () => {
       animationId = requestAnimationFrame(animate)
@@ -51,39 +80,81 @@ export function PartnersSection() {
   }, [])
 
   return (
-    <section className="py-16 lg:py-24 bg-card border-t border-border overflow-hidden">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <span className="text-sm uppercase tracking-widest text-[#a57c00]">Our Brand Partners</span>
-          <h2 className="mt-4 font-serif text-3xl md:text-4xl lg:text-5xl text-[#0d3d3d] text-balance">
-            Trusted by leading brands
-          </h2>
-          <p className="mt-4 text-muted-foreground max-w-xl mx-auto">
-            We work with trusted brands and suppliers to ensure quality, durability, and timeless design.
-          </p>
+    <section className="relative overflow-hidden bg-white py-16 lg:py-24">
+      {/* Top divider */}
+      <div className="pointer-events-none absolute left-1/2 top-0 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-neutral-200 to-transparent" />
+
+      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10 xl:px-16">
+        {/* Header */}
+        <div className="mx-auto mb-14 max-w-2xl text-center">
+          <motion.span
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="mb-2 block text-xs font-semibold uppercase tracking-[0.3em] text-[#c89f2f] sm:text-sm"
+          >
+            Brand Partnerships
+          </motion.span>
+          <motion.h2
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="font-serif text-3xl font-light leading-tight text-neutral-900 sm:text-4xl lg:text-5xl"
+          >
+            Trusted By Leading <span className="italic text-[#c89f2f]">Global Brands</span>
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mt-3 text-sm leading-relaxed text-neutral-600 sm:text-base"
+          >
+            We collaborate with world-class manufacturers for authentic hardware, laminates, appliances, and finishes.
+          </motion.p>
         </div>
       </div>
 
-      {/* Auto-scrolling logo slider */}
-      <div
-        ref={scrollRef}
-        className="flex gap-16 overflow-hidden whitespace-nowrap py-8"
-        style={{ scrollBehavior: "auto" }}
-      >
-        {/* Duplicate logos for seamless infinite scroll */}
-        {[...partners, ...partners].map((partner, index) => (
-          <div
-            key={`${partner.name}-${index}`}
-            className="flex-shrink-0 flex items-center justify-center w-40 h-20 grayscale hover:grayscale-0 opacity-60 hover:opacity-100 transition-all duration-300"
-          >
-            <img
-              src={partner.logo || "/placeholder.svg"}
-              alt={partner.name}
-              className="max-w-full max-h-full object-contain"
-            />
-          </div>
-        ))}
+      {/* Auto-scrolling logo slider with edge fade gradients */}
+      <div className="relative w-full">
+        {/* Left gradient overlay */}
+        <div className="pointer-events-none absolute bottom-0 left-0 top-0 z-10 w-16 bg-gradient-to-r from-white to-transparent sm:w-28" />
+        {/* Right gradient overlay */}
+        <div className="pointer-events-none absolute bottom-0 right-0 top-0 z-10 w-16 bg-gradient-to-l from-white to-transparent sm:w-28" />
+
+        <div
+          ref={scrollRef}
+          className="flex gap-6 overflow-hidden whitespace-nowrap py-4"
+          style={{ scrollBehavior: "auto" }}
+        >
+          {/* Duplicate logos for seamless infinite scroll */}
+          {[...partners, ...partners, ...partners].map((partner, index) => (
+            <div
+              key={`${partner.name}-${index}`}
+              className="group flex h-28 w-52 shrink-0 flex-col items-center justify-center rounded-2xl border border-neutral-200/80 bg-neutral-50/50 p-5 transition-all duration-400 hover:-translate-y-1 hover:border-[#c89f2f] hover:bg-white hover:shadow-md sm:h-32 sm:w-60"
+            >
+              <div className="relative h-12 w-36 grayscale opacity-75 transition-all duration-400 group-hover:grayscale-0 group-hover:opacity-100">
+                <Image
+                  src={partner.logo || "/placeholder.svg"}
+                  alt={`${partner.name} brand logo`}
+                  fill
+                  sizes="180px"
+                  loading="lazy"
+                  className="object-contain"
+                />
+              </div>
+              <span className="mt-2 text-[10px] font-semibold uppercase tracking-wider text-neutral-400 transition-colors duration-300 group-hover:text-[#c89f2f]">
+                {partner.category}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
+
+      {/* Bottom divider */}
+      <div className="mt-14 h-px w-full bg-gradient-to-r from-transparent via-neutral-200 to-transparent" />
     </section>
   )
 }

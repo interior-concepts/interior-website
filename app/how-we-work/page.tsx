@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { StagesIntro } from "@/components/how-we-work/stages-intro"
 import { InteractiveProcess } from "@/components/how-we-work/interactive-process"
 import { TeamSection } from "@/components/how-we-work/team-section"
@@ -5,30 +6,35 @@ import { CtaSection } from "@/components/how-we-work/cta-section"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { HowWeWorkHero } from "@/components/how-we-work/hero-section"
+import { BreadcrumbJsonLd } from "@/components/seo/json-ld"
 
-export const metadata = {
-  title: "How We Work | Aesthetic Interior",
+export const metadata: Metadata = {
+  title: "How We Work | Interior Concepts Studio",
   description:
-    "Discover our 5-stage design process - from initial consultation to project handover. Experience a smooth journey from idea to installation.",
+    "Discover our meticulous 5-stage design process — from your first consultation to a complimentary photoshoot handover. We craft luxurious interiors with precision, transparency, and care.",
+  alternates: {
+    canonical: "/how-we-work",
+  },
 }
 
 const stages = [
   {
     stageNumber: "01",
-    title: "Let's Start With Your Vision",
+    title: "We Start With Listening",
     subtitle: "Initial Connection",
     description:
-      "Everything begins with a simple form. Share your lifestyle, preferences, and ideas with us. The better we understand you, the more precisely we can design your space.",
+      "Great design begins with deep understanding. We take time to truly listen — learning about your lifestyle, aesthetic preferences, functional needs, and long-term aspirations before a single line is drawn.",
     steps: [
       {
-        title: "Share Your Requirements",
-        description: "Fill out our detailed form with your preferences, lifestyle needs, and design inspirations.",
+        title: "Share Your Vision",
+        description:
+          "Complete our thoughtfully crafted discovery form — giving us a window into your world, your tastes, inspirations, must-haves, and spatial goals.",
         icon: "message-square",
       },
       {
-        title: "Personalized Consultation",
+        title: "Private Design Consultation",
         description:
-          "One of our experts will connect with you to discuss your requirements, preferred design styles, packages, and similar completed projects. Based on this, we provide an initial budget guideline for your space.",
+          "A senior design consultant meets with you personally to explore your brief in depth, present relevant portfolio work, discuss package options, and establish a realistic initial budget framework.",
         icon: "users",
       },
     ],
@@ -36,26 +42,27 @@ const stages = [
   },
   {
     stageNumber: "02",
-    title: "Bringing Ideas to Life",
+    title: "We Craft Your Design Concept",
     subtitle: "Design Creation",
     description:
-      "Secure the project by paying 5% of the estimated budget. This allows us to begin crafting your personalized 3D interior design.",
+      "With a 5% booking confirmation, our creative team immerses itself in your project — developing photorealistic 3D renders, material boards, and a fully itemised cost plan so you can visualise every decision.",
     steps: [
       {
-        title: "Confirm Your Booking",
-        description: "Secure the project with an initial payment to kickstart the design process.",
+        title: "Secure Your Project Slot",
+        description:
+          "A nominal booking fee reserves your dedicated design team and locks in your project start date, ensuring no delays.",
         icon: "file-check",
       },
       {
-        title: "Design Finalization",
+        title: "3D Design & Concept Refinement",
         description:
-          "We combine your needs with our design expertise to develop a refined concept that perfectly aligns with your taste and functional goals.",
+          "We present bespoke 3D visualisations of your space, refining the concept through collaborative review rounds until it perfectly captures your vision.",
         icon: "pen-tool",
       },
       {
-        title: "Detailed Cost Planning",
+        title: "Transparent Budget Breakdown",
         description:
-          "A complete and transparent budget is prepared based on finalized materials, layouts, and finishes.",
+          "A detailed, line-by-line cost plan is prepared — covering materials, labour, and finishes — with no hidden charges, so you can plan with complete confidence.",
         icon: "receipt",
       },
     ],
@@ -63,20 +70,21 @@ const stages = [
   },
   {
     stageNumber: "03",
-    title: "Making It Real",
+    title: "Production Begins",
     subtitle: "Execution Begins",
     description:
-      "Move forward with 65% payment to initiate production. Working drawings will be shared within 7 days for your review and approval.",
+      "Upon your approval and a 65% milestone payment, we mobilise the full project team. Detailed working drawings are delivered within 7 days, and site preparation begins on a clear, communicated timeline.",
     steps: [
       {
-        title: "Approve & Proceed",
-        description: "Review and approve the final designs and working drawings before production begins.",
+        title: "Design Sign-Off & Milestone Payment",
+        description:
+          "You formally approve all working drawings and specifications before a single element enters production — giving you total peace of mind.",
         icon: "check-circle",
       },
       {
-        title: "Site Preparation & Production",
+        title: "Site Mobilisation & Material Procurement",
         description:
-          "Material procurement and on-site preparation begin. You'll be able to track progress through our structured project timeline and Gantt chart updates.",
+          "Premium materials are sourced and quality-checked. On-site work commences against a Gantt-chart schedule, with regular progress updates and photo reports shared with you.",
         icon: "hammer",
       },
     ],
@@ -84,19 +92,21 @@ const stages = [
   },
   {
     stageNumber: "04",
-    title: "Precision at Work",
+    title: "Excellence in Every Detail",
     subtitle: "Installation Phase",
-    description: "At 95% project completion milestone, major woodwork is finished and painting enters its final phase.",
+    description:
+      "As installation reaches 95% completion, our quality assurance team conducts a rigorous 51-point inspection — scrutinising every joint, finish, and fitting to ensure the result matches the design intent precisely.",
     steps: [
       {
-        title: "Final Execution Stage",
-        description: "Major structural and woodwork elements are completed with meticulous attention to detail.",
+        title: "Precision Installation",
+        description:
+          "Our specialist craftspeople execute every element — carpentry, painting, lighting, and furnishing — with the exacting standards our clients expect.",
         icon: "hard-hat",
       },
       {
         title: "51-Point Quality Inspection",
         description:
-          "Our team performs 51 professional quality inspections to ensure every detail is executed flawlessly before handover.",
+          "Before handover, every aspect of your interior is assessed against our comprehensive 51-point checklist — guaranteeing a flawless finish and a space that feels extraordinary.",
         icon: "eye",
       },
     ],
@@ -104,19 +114,21 @@ const stages = [
   },
   {
     stageNumber: "05",
-    title: "Step Into Your New Space",
+    title: "Welcome to Your New Space",
     subtitle: "Project Handover",
     description:
-      "Your interior is complete and ready for living. We celebrate your transformation with a complimentary professional photoshoot and a memorable handover experience.",
+      "The final 35% milestone is settled upon your complete satisfaction. We then walk you through every corner of your transformed space and celebrate with a complimentary professional photoshoot — your interiors, worthy of a magazine.",
     steps: [
       {
-        title: "Final Walkthrough",
-        description: "A complete tour of your finished space with all final touches in place.",
+        title: "Guided Final Walkthrough",
+        description:
+          "Your project team leads you through a room-by-room tour, explaining every finish, operation, and care instruction so you feel fully at home.",
         icon: "home",
       },
       {
-        title: "Complimentary Photoshoot",
-        description: "Capture the beauty of your new space with a professional photography session.",
+        title: "Complimentary Professional Photoshoot",
+        description:
+          "We commission a professional interior photography session as our gift to you — stunning images of your completed space to treasure and share.",
         icon: "camera",
       },
     ],
@@ -127,6 +139,7 @@ const stages = [
 export default function HowWeWorkPage() {
   return (
     <main className="min-h-screen bg-[#faf9f6] overflow-x-hidden">
+      <BreadcrumbJsonLd items={[{ name: "Home", path: "/" }, { name: "How We Work", path: "/how-we-work" }]} />
       <HowWeWorkHero />
       <StagesIntro />
       <InteractiveProcess stages={stages} />

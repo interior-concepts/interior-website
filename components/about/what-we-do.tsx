@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { Home, Building2, Wrench, Sofa, MessageSquare, ArrowRight } from "lucide-react"
+import Image from "next/image"
 
 const services = [
   {
@@ -78,9 +79,12 @@ export function WhatWeDo() {
               onMouseLeave={() => setHoveredIndex(null)}
             >
               {/* Background Image */}
-              <img
+              <Image
                 src={service.image || "/placeholder.svg"}
-                alt={service.title}
+                alt={`${service.title} interior design service preview`}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                loading="lazy"
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
 

@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { Users, BadgeCheck, Gem, Wrench, HeadphonesIcon } from "lucide-react"
+import Image from "next/image"
 
 const reasons = [
   {
@@ -46,9 +47,12 @@ export function WhyChooseUsSection() {
             </div>
           </div>
           <div>
-            <img
+            <Image
               src="/elegant-modern-kitchen-interior-with-marble-counte.jpg"
-              alt="Elegant modern kitchen interior"
+              alt="Elegant modern kitchen interior with marble countertop"
+              width={1200}
+              height={1600}
+              sizes="(max-width: 1024px) 100vw, 50vw"
               className="w-full h-[400px] lg:h-[600px] object-cover"
             />
           </div>

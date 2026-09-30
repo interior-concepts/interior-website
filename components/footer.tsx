@@ -1,7 +1,9 @@
 "use client"
 
 import Link from "next/link"
-import { MapPin, Phone, Mail, ArrowRight, Instagram, Facebook, Linkedin, Youtube } from "lucide-react"
+import Image from "next/image"
+import { MapPin, Phone, Mail, ArrowRight, Instagram, Facebook } from "lucide-react"
+import { FaWhatsapp } from "react-icons/fa"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 
@@ -12,17 +14,10 @@ const quickLinks = [
   { name: "Projects", href: "/projects" },
 ]
 
-const serviceLinks = [
-  { name: "Residential Design", href: "/services/residential" },
-  { name: "Commercial Design", href: "/services/commercial" },
-  { name: "Architectural Design", href: "/services/architectural" },
-]
-
 const socialLinks = [
-  { name: "Instagram", href: "https://www.instagram.com/aesthetic.interior.studio?fbclid=IwY2xjawPv0MdleHRuA2FlbQIxMABicmlkETBaaVdKYmFNbHBmbDhQQzBMc3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHopFyPPSVJSo_PcgVNUgOaKxFFHPfnMRc9vhZI-ZzvjMPFDUhBkDr5jYgPyi_aem_fk9gZ3wagobeJ4KN6iKBHQ", icon: Instagram },
-  { name: "Facebook", href: "https://www.facebook.com/aestheticinteriorofficial", icon: Facebook },
-  { name: "Linkedin", href: "https://www.linkedin.com/company/aesthetic-interior-studio", icon: Linkedin },
-  { name: "YouTube", href: "https://www.youtube.com/@AestheticInteriorofficial", icon: Youtube },
+  { name: "Facebook", href: "https://www.facebook.com/InteriorConceptss", icon: Facebook },
+  { name: "Instagram", href: "https://www.instagram.com/interiorconceptsstudio/", icon: Instagram },
+  { name: "WhatsApp", href: "https://wa.me/8801334935532", icon: FaWhatsapp },
 ]
 
 const containerVariants = {
@@ -90,7 +85,7 @@ export function Footer() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8"
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-8"
         >
           {/* Brand Section */}
           <motion.div variants={itemVariants} className="lg:col-span-1">
@@ -99,9 +94,12 @@ export function Footer() {
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
-                <img
-                  src="/images/logo3.png"
-                  alt="Aesthetic Interior Studio"
+                <Image
+                  src="/Logo/interior-concept-logo-dark.png"
+                  alt="Interior Concepts Studio"
+                  width={160}
+                  height={70}
+                  loading="lazy"
                   className="h-auto w-40 group-hover:opacity-80 transition-opacity"
                 />
               </motion.div>
@@ -151,51 +149,45 @@ export function Footer() {
             </ul>
           </motion.div>
 
-          {/* Services */}
-          <motion.div variants={itemVariants}>
-            <h3 className="font-semibold text-sm uppercase tracking-widest text-[#a57c00] mb-6">Services</h3>
-            <ul className="space-y-4">
-              {serviceLinks.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    href={link.href}
-                    className="text-white/70 text-sm hover:text-[#a57c00] transition-colors inline-flex items-center gap-2 group"
-                  >
-                    <span className="w-1 h-1 rounded-full bg-[#a57c00]/0 group-hover:bg-[#a57c00] transition-colors" />
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-
           {/* Contact Info */}
           <motion.div variants={itemVariants}>
             <h3 className="font-semibold text-sm uppercase tracking-widest text-[#a57c00] mb-6">Contact</h3>
             <div className="space-y-4">
               <motion.a
-                href="#"
+                href="https://maps.google.com/?q=174/1+Lake+View+Road+Gulshan-1+Dhaka+1212"
+                target="_blank"
+                rel="noopener noreferrer"
                 whileHover={{ x: 5 }}
                 className="flex items-start gap-3 text-white/70 hover:text-[#a57c00] transition-colors group"
               >
                 <MapPin className="h-5 w-5 text-[#a57c00] mt-0.5 flex-shrink-0" />
-                <span className="text-sm">183, East Senpara, Begum Rokeya Soroni , 3rd floor, Mirpur 10 , Dhaka-1216</span>
+                <span className="text-sm">174/1, Lake View Road, Gulshan-1, Dhaka, Bangladesh, 1212</span>
               </motion.a>
               <motion.a
-                href="tel:+8801329694663"
+                href="tel:+8801334935532"
                 whileHover={{ x: 5 }}
                 className="flex items-center gap-3 text-white/70 hover:text-[#a57c00] transition-colors"
               >
                 <Phone className="h-5 w-5 text-[#a57c00] flex-shrink-0" />
-                <span className="text-sm">+88 0132969 4663</span>
+                <span className="text-sm">01334-935532</span>
               </motion.a>
               <motion.a
-                href="mailto:aestheticinterior0029laus@gmail.com"
+                href="https://wa.me/8801334935532"
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ x: 5 }}
+                className="flex items-center gap-3 text-white/70 hover:text-[#a57c00] transition-colors"
+              >
+                <FaWhatsapp className="h-5 w-5 text-[#a57c00] flex-shrink-0" />
+                <span className="text-sm">01334-935532 (WhatsApp)</span>
+              </motion.a>
+              <motion.a
+                href="mailto:interiorconceptsstudio@gmail.com"
                 whileHover={{ x: 5 }}
                 className="flex items-center gap-3 text-white/70 hover:text-[#a57c00] transition-colors"
               >
                 <Mail className="h-5 w-5 text-[#a57c00] flex-shrink-0" />
-                <span className="text-sm break-all">hello@aestheticinterior.com</span>
+                <span className="text-sm break-all">interiorconceptsstudio@gmail.com</span>
               </motion.a>
             </div>
           </motion.div>
@@ -212,7 +204,7 @@ export function Footer() {
       >
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-white/50 text-center md:text-left">
-            © {new Date().getFullYear()} Aesthetic Interior Studio. All rights reserved.
+            © {new Date().getFullYear()} Interior Concepts Studio. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm text-white/50">
             <Link href="#" className="hover:text-[#a57c00] transition-colors">Privacy Policy</Link>

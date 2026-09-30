@@ -1,314 +1,173 @@
 "use client"
 
 import { useRef } from "react"
-import { motion, useScroll, useTransform, useInView } from "framer-motion"
-import { useRouter } from "next/navigation"
+import { motion, useInView } from "framer-motion"
+import Link from "next/link"
 import { Noto_Serif_Bengali } from "next/font/google"
+import { ArrowRight, MessageSquare, Paintbrush, FileText, Hammer, CheckCheck } from "lucide-react"
 
 const notoSerifBengali = Noto_Serif_Bengali({
   subsets: ["bengali"],
   weight: ["400", "500", "600", "700"],
 })
 
-interface ProcessStep {
-  number: string
-  title: string
-  description: string
-  videoSrc: string
-}
-
-const processSteps: ProcessStep[] = [
+const processSteps = [
   {
     number: "01",
     title: "Consultation",
-    description:
-      "একটি in-depth discussion-এর মাধ্যমে আমরা আপনার space, budget এবং design preferences বুঝে নিই।",
-    videoSrc: "/icon/consultation.mp4",
+    tag: "Discovery",
+    description: "Understanding your vision, lifestyle requirements, and project scope.",
+    icon: MessageSquare,
   },
   {
     number: "02",
     title: "Concept & Design",
-    description:
-      "আমাদের ডিজাইনাররা আপনার জন্য তৈরি করেন custom layouts, material selection এবং 3D visualizations।",
-    videoSrc: "/icon/design-drawing.mp4",
+    tag: "Creativity",
+    description: "Tailored 3D visualizations, spatial layouts, and curated material palettes.",
+    icon: Paintbrush,
   },
   {
     number: "03",
     title: "Detailed Planning",
-    description: "সবকিছু নিখুঁত রাখতে আমরা prepare করি detailed drawings, accurate budget এবং project timeline।",
-    videoSrc: "/icon/person-reading-map.mp4",
+    tag: "Precision",
+    description: "Complete technical blueprints, transparent budgets, and timelines.",
+    icon: FileText,
   },
   {
     number: "04",
     title: "Execution",
-    description:
-      "Production থেকে final installation—সবকিছু আমাদের expert team rigorous quality control-এর মাধ্যমে manage করে।",
-    videoSrc: "/icon/bricks.mp4",
+    tag: "Craftsmanship",
+    description: "Flawless site supervision, custom fabrication, and quality installation.",
+    icon: Hammer,
   },
   {
     number: "05",
     title: "Handover",
-    description: "আপনার beautifully finished space টিম বুঝিয়ে দেওয়া হয়, ready for you to live and work।",
-    videoSrc: "/icon/alms.mp4",
+    tag: "Completion",
+    description: "Final walkthrough, warranty delivery, and ongoing aftercare support.",
+    icon: CheckCheck,
   },
 ]
 
-function StepVideo({ src, title }: { src: string; title: string }) {
-  return (
-    <video
-      src={src}
-      autoPlay
-      loop
-      muted
-      playsInline
-      preload="metadata"
-      className="h-16 w-16 rounded-md object-cover"
-      aria-label={`${title} video icon`}
-    />
-  )
-}
-
-function MobileStep({ step, index }: { step: ProcessStep; index: number }) {
-  const stepRef = useRef<HTMLDivElement>(null)
-  const isInView = useInView(stepRef, { once: false, margin: "-50px" })
-
-  return (
-    <motion.div
-      ref={stepRef}
-      className="flex gap-4"
-      initial={{ opacity: 0, x: -30 }}
-      animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
-      transition={{ duration: 0.5, delay: 0.1 }}
-    >
-      <div className="flex flex-col items-center flex-shrink-0">
-        <motion.div
-          className="w-24 h-24 rounded-full bg-white border-2 border-[#a57c00] flex items-center justify-center shadow-lg relative"
-          whileHover={{ scale: 1.08 }}
-        >
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={isInView ? { scale: 1 } : {}}
-            transition={{ duration: 0.4, delay: 0.2 }}
-            className="text-[#a57c00]"
-          >
-            <StepVideo src={step.videoSrc} title={step.title} />
-          </motion.div>
-
-          <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-[#a57c00] text-white text-xs font-bold flex items-center justify-center">
-            {step.number.split("").pop()}
-          </div>
-        </motion.div>
-
-        {index !== processSteps.length - 1 && (
-          <motion.div
-            className="w-1 bg-gradient-to-b from-[#a57c00]/30 to-transparent flex-1 mt-2 min-h-[60px]"
-            initial={{ height: 0 }}
-            animate={isInView ? { height: 60 } : {}}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          />
-        )}
-      </div>
-
-      <motion.div
-        className="flex-1 pt-2"
-        initial={{ opacity: 0, x: 20 }}
-        animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-      >
-        <div className={`bg-white rounded-xl p-4 border border-[#0d3d3d]/10 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-[#a57c00]/35 transition-all duration-500 relative overflow-hidden group ${notoSerifBengali.className}`}>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(13,61,61,0.08),transparent_40%)] opacity-70" />
-          <div className="absolute -top-10 -left-10 h-24 w-24 rounded-full bg-[#a57c00]/10 blur-2xl group-hover:scale-125 transition-transform duration-700" />
-          <div className="absolute top-0 left-0 h-[2px] w-0 bg-gradient-to-r from-[#a57c00] to-[#0d3d3d] group-hover:w-full transition-all duration-500" />
-          <div className="absolute top-0 right-0 h-10 w-10 bg-[#a57c00]/10 [clip-path:polygon(100%_0,0_0,100%_100%)]" />
-          <h3 className="relative font-medium text-[#0d3d3d] mb-2 text-sm group-hover:text-[#a57c00] transition-colors">{step.title}</h3>
-          <p className="relative text-[#0d3d3d]/60 text-xs leading-relaxed">{step.description}</p>
-        </div>
-      </motion.div>
-    </motion.div>
-  )
-}
-
-function HorizontalFlow() {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const isInView = useInView(containerRef, { once: false, margin: "-100px" })
-
-  return (
-    <div ref={containerRef} className="hidden lg:block">
-      <div className="relative">
-        <motion.div
-          className="absolute top-12 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#a57c00]/30 to-transparent rounded-full"
-          initial={{ scaleX: 0 }}
-          animate={isInView ? { scaleX: 1 } : { scaleX: 0 }}
-          transition={{ duration: 1.5, delay: 0.3 }}
-          style={{ originX: 0 }}
-        />
-
-        <div className="grid grid-cols-5 gap-4 relative z-10">
-          {processSteps.map((step, index) => (
-            <motion.div
-              key={step.number}
-              className="flex flex-col items-center"
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.6, delay: index * 0.1 + 0.2 }}
-            >
-              <motion.div className="relative mb-8" whileHover={{ scale: 1.1 }}>
-                <div className="w-32 h-32 rounded-full bg-white border-2 border-[#a57c00] flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow cursor-pointer group">
-                  <motion.div
-                    initial={{ scale: 0, rotate: -180 }}
-                    animate={isInView ? { scale: 1, rotate: 0 } : {}}
-                    transition={{ duration: 0.6, delay: index * 0.1 + 0.4 }}
-                    className="group-hover:scale-110 transition-transform"
-                  >
-                    <StepVideo src={step.videoSrc} title={step.title} />
-                  </motion.div>
-                </div>
-
-                <div className="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-[#a57c00] text-white text-xs font-bold flex items-center justify-center">
-                  {step.number.split("").pop()}
-                </div>
-              </motion.div>
-
-              <motion.div
-                className="w-full h-full"
-                initial={{ opacity: 0, y: 30 }}
-                animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-                transition={{ duration: 0.6, delay: index * 0.1 + 0.3 }}
-              >
-                <div className={`bg-white rounded-xl p-4 border border-[#0d3d3d]/10 shadow-sm hover:shadow-2xl hover:-translate-y-1.5 hover:border-[#a57c00]/45 transition-all duration-500 group h-full min-h-[170px] relative overflow-hidden ${notoSerifBengali.className}`}>
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(13,61,61,0.08),transparent_42%)] opacity-70" />
-                  <div className="absolute -top-14 -left-14 h-28 w-28 rounded-full bg-[#a57c00]/10 blur-2xl group-hover:scale-125 transition-transform duration-700" />
-                  <div className="absolute top-0 left-0 h-[2px] w-0 bg-gradient-to-r from-[#a57c00] to-[#0d3d3d] group-hover:w-full transition-all duration-500" />
-                  <div className="absolute inset-y-0 -left-24 w-12 rotate-12 bg-white/40 blur-md group-hover:left-[120%] transition-all duration-700" />
-                  <div className="absolute top-0 right-0 h-12 w-12 bg-[#a57c00]/10 [clip-path:polygon(100%_0,0_0,100%_100%)]" />
-                  <h3 className="relative font-medium text-[#0d3d3d] mb-2 text-sm group-hover:text-[#a57c00] transition-colors">
-                    {step.title}
-                  </h3>
-                  <p className="relative text-[#0d3d3d]/60 text-xs leading-relaxed">{step.description}</p>
-                </div>
-              </motion.div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function VerticalFlow() {
-  return (
-    <div className="lg:hidden space-y-6">
-      {processSteps.map((step, index) => (
-        <MobileStep key={step.number} step={step} index={index} />
-      ))}
-    </div>
-  )
-}
-
 export function ProcessSection() {
-  const containerRef = useRef<HTMLDivElement>(null)
   const headerRef = useRef<HTMLDivElement>(null)
   const isHeaderInView = useInView(headerRef, { once: true })
-  const router = useRouter()
-
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"],
-  })
-
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"])
+  const stepsRef = useRef<HTMLDivElement>(null)
+  const isStepsInView = useInView(stepsRef, { once: true, margin: "-60px" })
 
   return (
-    <section ref={containerRef} className="py-24 lg:py-32 bg-card relative overflow-hidden">
-      <motion.div style={{ y: backgroundY }} className="absolute inset-0 opacity-[0.02]">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: "radial-gradient(circle at 1px 1px, #0d3d3d 1px, transparent 0)",
-            backgroundSize: "50px 50px",
-          }}
-        />
-      </motion.div>
+    <section className="relative overflow-hidden bg-white py-20 lg:py-28">
 
-      <div className="mx-auto max-w-6xl px-6 lg:px-8 relative z-10">
-        <div ref={headerRef} className="text-center mb-20">
+      {/* Top golden gradient accent */}
+      <div className="pointer-events-none absolute left-1/2 top-0 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-[#c89f2f]/40 to-transparent" />
+
+      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10 xl:px-16">
+
+        {/* ── Center-Aligned Header ── */}
+        <div ref={headerRef} className="mx-auto mb-16 flex max-w-2xl flex-col items-center text-center">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={isHeaderInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.5 }}
+            className="mb-3"
           >
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <motion.div
-                initial={{ width: 0 }}
-                animate={isHeaderInView ? { width: 32 } : {}}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                aria-hidden="true"
-                className="h-px bg-[#a57c00]"
-              />
-              <p className="text-[#0d3d3d] text-sm uppercase tracking-widest font-medium">How We Work</p>
-              <motion.div
-                initial={{ width: 0 }}
-                animate={isHeaderInView ? { width: 32 } : {}}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                aria-hidden="true"
-                className="h-px bg-[#a57c00]"
-              />
-            </div>
+            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[#c89f2f] sm:text-sm">
+              How We Work
+            </span>
           </motion.div>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={isHeaderInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.15 }}
-            className={`${notoSerifBengali.className} mb-5 text-base font-medium tracking-wide text-[#a57c00]`}
-          >
-            নকশা থেকে বাস্তবায়ন, প্রতিটি ধাপে যত্ন
-          </motion.p>
-
           <motion.h2
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={isHeaderInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-4xl md:text-5xl lg:text-6xl font-serif font-light text-[#0d3d3d] mb-6"
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="font-serif text-4xl font-light leading-tight text-neutral-900 sm:text-5xl lg:text-6xl"
           >
-            Our Design
-            <br />
-            <span className="italic text-[#a57c00]">Process</span>
+            Our Design{" "}
+            <span className="italic text-[#c89f2f]">Process</span>
           </motion.h2>
 
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={isHeaderInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-[#0d3d3d]/60 max-w-2xl mx-auto leading-relaxed text-lg"
+            initial={{ opacity: 0 }}
+            animate={isHeaderInView ? { opacity: 1 } : {}}
+            transition={{ duration: 0.5, delay: 0.15 }}
+            className={`${notoSerifBengali.className} mt-3 text-base font-medium text-[#c89f2f] sm:text-lg`}
           >
-            A structured approach to transforming spaces, from initial concept to final execution.
+            নকশা থেকে বাস্তবায়ন, প্রতিটি ধাপে যত্ন
           </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={isHeaderInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mt-4 text-sm leading-relaxed text-neutral-600 sm:text-base"
+          >
+            A clear 5-step journey from initial concept to your dream space.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={isHeaderInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.25 }}
+            className="mt-6"
+          >
+            <Link
+              href="/how-we-work"
+              className="group inline-flex items-center gap-2 rounded-full border border-neutral-900 bg-neutral-900 px-7 py-3 text-xs font-semibold uppercase tracking-[0.15em] text-white transition-all duration-300 hover:border-[#c89f2f] hover:bg-[#c89f2f] hover:text-black sm:text-sm"
+            >
+              See Full Process
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </motion.div>
         </div>
 
-        <HorizontalFlow />
-        <VerticalFlow />
+        {/* ── Sleek Process Cards Grid ── */}
+        <div ref={stepsRef} className="grid grid-cols-1 gap-5 md:grid-cols-3 lg:grid-cols-5 lg:gap-6">
+          {processSteps.map((step, index) => {
+            const Icon = step.icon
+            return (
+              <motion.div
+                key={step.number}
+                initial={{ opacity: 0, y: 24 }}
+                animate={isStepsInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.5, delay: index * 0.08, ease: "easeOut" }}
+                className="group relative flex flex-col justify-between rounded-2xl border border-neutral-200/80 bg-neutral-50/60 p-6 transition-all duration-500 hover:-translate-y-1.5 hover:border-[#c89f2f] hover:bg-white hover:shadow-xl lg:p-7"
+              >
+                {/* Top Section: Icon & Step Number Watermark */}
+                <div>
+                  <div className="mb-6 flex items-center justify-between">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-[#c89f2f]/30 bg-white text-[#c89f2f] shadow-sm transition-colors duration-400 group-hover:border-[#c89f2f] group-hover:bg-[#c89f2f] group-hover:text-black">
+                      <Icon className="h-5 w-5" strokeWidth={1.75} />
+                    </div>
+                    <span className="font-serif text-3xl font-light text-neutral-300 transition-colors duration-400 group-hover:text-[#c89f2f]">
+                      {step.number}
+                    </span>
+                  </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mt-20"
-        >
-          <p className="text-[#0d3d3d]/60 mb-6">Ready to start your project?</p>
-          <motion.button
-            onClick={() => router.push("/how-we-work")}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-3 px-8 py-4 bg-[#0d3d3d] text-white rounded-full hover:bg-[#0d3d3d]/90 transition-colors font-medium focus:outline-none focus:ring-2 focus:ring-[#a57c00] focus:ring-offset-2"
-            aria-label="Start your design journey"
-          >
-            Start Your Journey
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </motion.button>
-        </motion.div>
+                  {/* Category Tag */}
+                  <span className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.2em] text-[#c89f2f]">
+                    {step.tag}
+                  </span>
+
+                  {/* Title */}
+                  <h3 className="mb-3 font-serif text-xl font-medium text-neutral-900 lg:text-2xl">
+                    {step.title}
+                  </h3>
+
+                  {/* Concise Description */}
+                  <p className="text-sm leading-relaxed text-neutral-600">
+                    {step.description}
+                  </p>
+                </div>
+
+                {/* Bottom Accent line indicator */}
+                <div className="mt-6 h-0.5 w-8 bg-neutral-200 transition-all duration-500 group-hover:w-full group-hover:bg-[#c89f2f]" />
+              </motion.div>
+            )
+          })}
+        </div>
+
+        {/* Bottom divider line */}
+        <div className="mt-14 h-px w-full bg-gradient-to-r from-transparent via-neutral-200 to-transparent" />
       </div>
     </section>
   )

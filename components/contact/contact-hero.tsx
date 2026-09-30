@@ -1,15 +1,19 @@
 "use client"
 
 import { motion } from "framer-motion"
+import Image from "next/image"
 
 export function ContactHero() {
   return (
     <section className="relative w-full pt-32 pb-20 md:pt-40 md:pb-32 overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 -z-10">
-        <img
+        <Image
           src="/custom-bespoke-furniture-wooden-craftsmanship.jpg"
-          alt="Interior Design Studio"
+          alt="Custom bespoke furniture craftsmanship in an interior design studio"
+          fill
+          priority
+          sizes="100vw"
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/50" />

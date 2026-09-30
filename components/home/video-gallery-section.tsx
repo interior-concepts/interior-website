@@ -204,12 +204,13 @@ export function VideoGallerySection() {
 							width="100%"
 							height="100%"
 							src={`https://www.youtube-nocookie.com/embed/${bannerVideo.youtubeId}?autoplay=${
-								bannerInView ? 1 : 0
-							}&mute=1&playsinline=1&rel=0&vq=hd720&modestbranding=1&iv_load_policy=3&controls=0&disablekb=1&fs=0&enablejsapi=1`}
+								0
+							}&mute=1&playsinline=1&rel=0&vq=hd720&modestbranding=1&iv_load_policy=3&controls=1&disablekb=0&fs=1&enablejsapi=1`}
 							title={bannerVideo.title}
 							frameBorder="0"
 							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 							allowFullScreen
+							loading="lazy"
 							className="pointer-events-none absolute top-1/2 left-1/2"
 							style={{
 								width: "177.78vh",
@@ -240,8 +241,11 @@ export function VideoGallerySection() {
 							<div className="aspect-[4/3] overflow-hidden bg-muted rounded-lg">
 								<img
 									src={getYoutubeThumbnail(video.youtubeId)}
-									alt={video.title}
+									alt={`${video.title} video thumbnail`}
 									loading="lazy"
+									width={640}
+									height={480}
+									decoding="async"
 									onError={(e) => {
 										const img = e.currentTarget as HTMLImageElement
 										if (img.src.includes("maxresdefault")) {

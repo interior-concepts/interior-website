@@ -6,11 +6,11 @@ export function AboutHero() {
   return (
     <Hero
       subtitle="About Us"
-      title="Built on Vision"
-      titleHighlight="Designed with Passion"
-      description="We are a design-focused interior studio dedicated to creating functional and inspiring spaces that reflect each client's vision and lifestyle."
+      title="Visionary by Design"
+      titleHighlight="Passionate by Nature"
+      description="We transform spaces into thoughtful, inspiring environments crafted specifically around your lifestyle and creative vision."
       buttonText="Learn More"
-      backgroundImage="/banner/Banner12.png"
+      backgroundImage="/bannerinterior/Banner21.jpeg"
     />
   )
 }

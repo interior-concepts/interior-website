@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import type { LucideIcon } from "lucide-react"
+import Image from "next/image"
 
 interface ProcessStageProps {
   stageNumber: string
@@ -119,9 +120,12 @@ export function ProcessStage({
                 style={{ backgroundColor: "#0d3d3d" }}
               />
               <div className="relative overflow-hidden rounded-2xl">
-                <img
+                <Image
                   src={imageSrc || "/placeholder.svg"}
-                  alt={title}
+                  alt={`${title} process stage image`}
+                  width={1200}
+                  height={900}
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   className="w-full h-[400px] md:h-[500px] object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 opacity-20" style={{ backgroundColor: "#0d3d3d" }} />

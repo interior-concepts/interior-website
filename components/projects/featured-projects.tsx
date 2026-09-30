@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Image from "next/image"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -75,9 +76,12 @@ export function FeaturedProjects() {
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Image Carousel */}
           <div className="relative aspect-[4/3] rounded-xl overflow-hidden group">
-            <img
+            <Image
               src={project.images[currentImage] || "/placeholder.svg"}
-              alt={project.title}
+              alt={`${project.title} featured project image`}
+              width={1200}
+              height={900}
+              sizes="(max-width: 1024px) 100vw, 50vw"
               className="w-full h-full object-cover transition-transform duration-700"
             />
 

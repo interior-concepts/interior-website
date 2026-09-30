@@ -1,76 +1,67 @@
 "use client"
 
-import { useEffect, useRef } from "react"
-import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
+import { useRef } from "react"
+import Link from "next/link"
+import { motion, useInView } from "framer-motion"
+import { ArrowRight, ArrowUpRight } from "lucide-react"
 
 export function AboutCTA() {
-  const contentRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("animate-in", "fade-in", "zoom-in-95")
-            entry.target.classList.remove("opacity-0")
-          }
-        })
-      },
-      { threshold: 0.3 },
-    )
-
-    if (contentRef.current) {
-      observer.observe(contentRef.current)
-    }
-
-    return () => observer.disconnect()
-  }, [])
+  const containerRef = useRef<HTMLDivElement>(null)
+  const isInView = useInView(containerRef, { once: true, margin: "-60px" })
 
   return (
-    <section className="py-24 bg-white relative overflow-hidden">
-      {/* Decorative Elements */}
-      <div className="absolute top-0 left-0 w-64 h-64 bg-[#a57c00]/5 rounded-full -translate-x-1/2 -translate-y-1/2" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#1a3a2f]/5 rounded-full translate-x-1/2 translate-y-1/2" />
+    <section className="relative overflow-hidden bg-white py-20 lg:py-28">
+      {/* Top golden gradient divider */}
+      <div className="pointer-events-none absolute left-1/2 top-0 h-px w-3/4 -translate-x-1/2 bg-gradient-to-r from-transparent via-[#c89f2f]/30 to-transparent" />
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
-        <div
-          ref={contentRef}
-          className="opacity-0 duration-1000 bg-[#a57c00] rounded-3xl p-8 sm:p-12 lg:p-16 text-center relative overflow-hidden"
+      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-10 xl:px-16">
+        <motion.div
+          ref={containerRef}
+          initial={{ opacity: 0, y: 24 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          className="relative overflow-hidden rounded-3xl bg-[#0a0a0a] px-8 py-16 text-center text-white sm:px-12 lg:px-20 lg:py-20 shadow-2xl"
         >
-          {/* Background Pattern */}
-          <div className="absolute inset-0 opacity-10">
-            <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-              <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
-                <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" strokeWidth="0.5" />
-              </pattern>
-              <rect width="100%" height="100%" fill="url(#grid)" />
-            </svg>
-          </div>
+          {/* Subtle background glow */}
+          <div className="pointer-events-none absolute -left-20 -top-20 h-80 w-80 rounded-full bg-[#c89f2f]/10 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-20 -right-20 h-80 w-80 rounded-full bg-[#c89f2f]/10 blur-3xl" />
 
-          <div className="relative z-10">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-light text-white mb-6 text-balance">
-              Let&apos;s Create Your Dream Space
+          <div className="relative z-10 mx-auto max-w-2xl">
+            {/* Tag */}
+            <span className="mb-3 block text-xs font-semibold uppercase tracking-[0.3em] text-[#c89f2f] sm:text-sm">
+              Start Your Journey
+            </span>
+
+            {/* Heading */}
+            <h2 className="font-serif text-3xl font-light leading-tight text-white sm:text-4xl lg:text-5xl">
+              Ready to Transform Your{" "}
+              <span className="italic text-[#c89f2f]">Living Experience?</span>
             </h2>
-            <p className="text-white/90 max-w-2xl mx-auto mb-8 text-lg leading-relaxed text-pretty">
-              Whether it&apos;s a home, office, or commercial project, we bring your vision to life with creativity,
-              precision, and care.
+
+            {/* Subtitle */}
+            <p className="mt-4 text-sm leading-relaxed text-white/70 sm:text-base">
+              Whether you are designing a luxury residence, duplex apartment, or commercial office, we bring your vision to life with architectural precision.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-white text-[#a57c00] hover:bg-white/90 rounded-full px-8 group">
-                Book a Consultation
-                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-white text-white hover:bg-white/10 rounded-full px-8 bg-transparent"
+
+            {/* Buttons */}
+            <div className="mt-8 flex flex-wrap justify-center gap-4 sm:mt-10">
+              <Link
+                href="/contact"
+                className="group inline-flex items-center gap-2.5 rounded-full border border-white bg-white px-8 py-4 text-xs font-semibold uppercase tracking-wider text-black transition-all duration-300 hover:border-[#c89f2f] hover:bg-[#c89f2f] hover:text-black sm:text-sm"
               >
-                View Our Portfolio
-              </Button>
+                Book a Consultation
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+              <Link
+                href="/projects"
+                className="group inline-flex items-center gap-2.5 rounded-full border border-white/30 px-8 py-4 text-xs font-semibold uppercase tracking-wider text-white transition-all duration-300 hover:border-white hover:bg-white/10 sm:text-sm"
+              >
+                Explore Portfolio
+                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              </Link>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   )

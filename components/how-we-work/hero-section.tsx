@@ -6,11 +6,11 @@ export function HowWeWorkHero() {
   return (
     <Hero
       subtitle="Our Process"
-      title="A Smooth Journey"
-      titleHighlight="From Idea to Installation"
-      description="Discover how we transform your vision into a beautifully crafted space, step by step with precision and care."
-      buttonText="View All Projects"
-      backgroundImage="/background/background10.jpg"
+      title="From Vision to"
+      titleHighlight="Masterpiece"
+      description="A seamless five-stage journey crafted to transform your ideas into exceptional living and working spaces — with precision, care, and artistry at every step."
+      buttonText="Start Your Journey"
+      backgroundImage="/banner/Banner16.jpeg"
     />
   )
 }

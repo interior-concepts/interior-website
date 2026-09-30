@@ -4,32 +4,32 @@ import { motion } from "framer-motion"
 import { MapPin, Phone, Mail, Clock } from "lucide-react"
 
 const contactMethods = [
-    {
+  {
     icon: MapPin,
     title: "Office Location",
     details:
-      "183, East Senpara, Begum Rokeya Soroni, 3rd Floor, Mirpur 10, Dhaka-1216",
-    link: "https://maps.google.com/?q=183+East+Senpara+Begum+Rokeya+Soroni+Mirpur+10+Dhaka-1216",
+      "174/1, Lake View Road, Gulshan-1, Dhaka, Bangladesh, 1212",
+    link: "https://maps.google.com/?q=174/1+Lake+View+Road+Gulshan-1+Dhaka+1212",
     linkText: "View on Map",
   },
   {
     icon: Phone,
     title: "Phone",
-    details: "+88 0132969 4663",
-    link: "tel:+8801329694663",
+    details: "01334-935532",
+    link: "tel:+8801334935532",
     linkText: "Call us",
   },
   {
     icon: Mail,
     title: "Email",
-    details: "aestheticinterior0029laus@gmail.com",
-    link: "mailto:aestheticinterior0029laus@gmail.com",
+    details: "interiorconceptsstudio@gmail.com",
+    link: "mailto:interiorconceptsstudio@gmail.com",
     linkText: "Send email",
   },
   {
     icon: Clock,
     title: "Business Hours",
-    details: "Sun - Thus: 9:00 AM - 6:00 PM",
+    details: "Sun - Thu: 9:00 AM - 6:00 PM",
     link: "#",
     linkText: "Saturday: 10:00 AM - 4:00 PM",
   },

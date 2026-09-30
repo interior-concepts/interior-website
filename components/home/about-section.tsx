@@ -1,3 +1,5 @@
+import Image from "next/image"
+
 export function AboutSection() {
 
   
@@ -6,9 +8,12 @@ export function AboutSection() {
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           <div>
-            <img
+            <Image
               src="/interior-design-team-working-in-modern-studio-offi.jpg"
-              alt="Interior design team at work"
+              alt="Interior design team working in a modern studio"
+              width={1200}
+              height={900}
+              sizes="(max-width: 1024px) 100vw, 50vw"
               className="w-full h-[400px] lg:h-[500px] object-cover"
             />
           </div>

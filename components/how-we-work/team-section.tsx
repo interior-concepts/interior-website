@@ -1,23 +1,56 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { Compass, Users, ClipboardCheck } from "lucide-react"
+import { Compass, Users, ClipboardCheck, Shield, Ruler, Sparkles } from "lucide-react"
 
 const teamMembers = [
   {
-    title: "Project Architect",
-    description: "Leads the design direction and ensures your home reflects your personality and lifestyle.",
+    title: "Lead Design Architect",
+    role: "Creative Direction",
+    description:
+      "Shapes the entire design vision — translating your lifestyle, aspirations, and personality into breathtaking interiors that feel distinctly yours.",
     icon: Compass,
+    highlight: "Concept to Blueprint",
   },
   {
-    title: "Client Manager",
-    description: "Supervises the full journey, coordinating communication and keeping everything running smoothly.",
+    title: "Client Experience Manager",
+    role: "Client Relations",
+    description:
+      "Your single point of contact throughout the project. Ensures seamless communication, timely updates, and that every decision reflects your needs.",
     icon: Users,
+    highlight: "End-to-End Support",
   },
   {
-    title: "Project Coordinator",
-    description: "Manages on-site execution to guarantee timely delivery and precision in every step.",
+    title: "Site Execution Lead",
+    role: "On-Site Delivery",
+    description:
+      "Commands the on-ground team with precision — managing timelines, quality control, and the 51-point inspection that guarantees a flawless handover.",
     icon: ClipboardCheck,
+    highlight: "51-Point QC",
+  },
+  {
+    title: "Material Specialist",
+    role: "Sourcing & Finishes",
+    description:
+      "Curates premium materials, textures, and finishes that align with your design concept and long-term durability requirements.",
+    icon: Ruler,
+    highlight: "Premium Sourcing",
+  },
+  {
+    title: "Quality Assurance Lead",
+    role: "Standards & Compliance",
+    description:
+      "Monitors every phase of production and installation against our quality benchmarks to ensure zero-compromise delivery.",
+    icon: Shield,
+    highlight: "Zero Compromise",
+  },
+  {
+    title: "Interior Stylist",
+    role: "Final Curation",
+    description:
+      "The finishing artist who assembles décor, lighting, and accessories to bring your space to life — ready for the handover photoshoot.",
+    icon: Sparkles,
+    highlight: "Perfect Finish",
   },
 ]
 
@@ -28,94 +61,125 @@ export function TeamSection() {
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-        }
-      },
-      { threshold: 0.2 },
+      ([entry]) => { if (entry.isIntersecting) setIsVisible(true) },
+      { threshold: 0.15 },
     )
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
-    }
-
+    if (sectionRef.current) observer.observe(sectionRef.current)
     return () => observer.disconnect()
   }, [])
 
   return (
-    <section ref={sectionRef} className="py-24 md:py-32 bg-[#0d3d3d]">
+    <section ref={sectionRef} className="py-24 md:py-32 bg-[#faf9f6]">
       <div className="container mx-auto px-6">
+        {/* Header */}
         <div
-          className={`text-center mb-16 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-            }`}
+          className={`text-center mb-16 transition-all duration-700 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          }`}
         >
-          <p className="text-sm font-sans tracking-[0.3em] uppercase mb-4 font-medium text-[#a57c00]">
+          <span className="inline-block text-xs font-sans tracking-[0.35em] uppercase font-semibold text-[#a57c00] mb-5">
             Your Dedicated Team
-          </p>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-light text-white mb-6 text-balance">Meet Your Project Team</h2>
-          <p className="text-white/70 font-sans max-w-2xl mx-auto leading-relaxed text-pretty">
-            A dedicated team of professionals committed to bringing your vision to life with expertise and care.
+          </span>
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="h-px w-12 bg-[#a57c00]/40" />
+            <div className="w-1.5 h-1.5 rounded-full bg-[#a57c00]" />
+            <div className="h-px w-12 bg-[#a57c00]/40" />
+          </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-light text-[#0d3d3d] mb-4 text-balance">
+            The People Behind Your Space
+          </h2>
+          <p className="text-[#4a4a4a] font-sans text-base max-w-xl mx-auto leading-relaxed">
+            A hand-picked team of professionals — each an expert in their discipline — working together to deliver
+            an interior that exceeds expectations.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        {/* Cards grid */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {teamMembers.map((member, index) => (
             <div
               key={member.title}
-              className={`group transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-                }`}
-              style={{ transitionDelay: `${(index + 1) * 200}ms` }}
+              className={`transition-all duration-700 ${
+                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+              }`}
+              style={{ transitionDelay: `${index * 100}ms` }}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(null)}
             >
               <div
-                className={`relative rounded-2xl p-8 border transition-all duration-500 h-full cursor-pointer ${hoveredIndex === index
-                    ? "bg-white border-white shadow-2xl shadow-[#a57c00]/20 -translate-y-3"
-                    : "bg-white/5 backdrop-blur-sm border-white/10 hover:border-white/30"
-                  }`}
+                className={`relative rounded-2xl p-7 border-2 cursor-pointer h-full transition-all duration-400 overflow-hidden ${
+                  hoveredIndex === index
+                    ? "border-[#0d3d3d] bg-[#0d3d3d] shadow-2xl shadow-[#0d3d3d]/15 -translate-y-2"
+                    : "border-gray-100 bg-white hover:border-[#0d3d3d]/20"
+                }`}
               >
-                {/* Icon with enhanced hover */}
+                {/* Watermark number */}
+                <span
+                  className={`absolute -top-4 -right-2 text-8xl font-serif font-bold select-none pointer-events-none transition-all duration-400 ${
+                    hoveredIndex === index ? "text-white/[0.06]" : "text-[#0d3d3d]/[0.04]"
+                  }`}
+                >
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+
+                {/* Icon */}
                 <div
-                  className={`w-16 h-16 rounded-xl flex items-center justify-center mb-6 transition-all duration-500 ${hoveredIndex === index ? "bg-[#0d3d3d] scale-110 rotate-6" : "bg-[#a57c00]"
-                    }`}
+                  className={`w-14 h-14 rounded-xl flex items-center justify-center mb-5 transition-all duration-400 ${
+                    hoveredIndex === index ? "bg-[#a57c00] scale-110 rotate-3" : "bg-[#f5f2ee]"
+                  }`}
                 >
                   <member.icon
-                    className={`w-8 h-8 transition-colors duration-300 ${hoveredIndex === index ? "text-[#a57c00]" : "text-white"
-                      }`}
+                    className={`w-7 h-7 transition-colors duration-300 ${
+                      hoveredIndex === index ? "text-white" : "text-[#0d3d3d]"
+                    }`}
                   />
                 </div>
 
+                {/* Role badge */}
+                <p
+                  className={`text-xs font-sans tracking-widest uppercase font-semibold mb-1.5 transition-colors duration-300 ${
+                    hoveredIndex === index ? "text-[#a57c00]" : "text-[#a57c00]/70"
+                  }`}
+                >
+                  {member.role}
+                </p>
+
+                {/* Title */}
                 <h3
-                  className={`text-xl font-serif font-light mb-3 transition-colors duration-300 ${hoveredIndex === index ? "text-[#0d3d3d]" : "text-white"
-                    }`}
+                  className={`text-lg font-serif font-light mb-3 transition-colors duration-300 ${
+                    hoveredIndex === index ? "text-white" : "text-[#0d3d3d]"
+                  }`}
                 >
                   {member.title}
                 </h3>
+
+                {/* Divider */}
+                <div
+                  className={`w-8 h-0.5 mb-4 transition-all duration-400 ${
+                    hoveredIndex === index ? "bg-[#a57c00] w-12" : "bg-gray-200"
+                  }`}
+                />
+
+                {/* Description */}
                 <p
-                  className={`font-sans leading-relaxed transition-colors duration-300 ${hoveredIndex === index ? "text-gray-600" : "text-white/60"
-                    }`}
+                  className={`font-sans text-sm leading-relaxed transition-colors duration-300 ${
+                    hoveredIndex === index ? "text-white/75" : "text-gray-500"
+                  }`}
                 >
                   {member.description}
                 </p>
 
-                {/* Arrow indicator on hover */}
+                {/* Highlight tag */}
                 <div
-                  className={`absolute bottom-8 right-8 transition-all duration-500 ${hoveredIndex === index ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-4"
-                    }`}
+                  className={`mt-5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-sans font-medium transition-all duration-400 ${
+                    hoveredIndex === index
+                      ? "bg-[#a57c00]/20 text-[#a57c00]"
+                      : "bg-[#0d3d3d]/5 text-[#0d3d3d]/60"
+                  }`}
                 >
-                  <div className="w-10 h-10 rounded-full bg-[#a57c00] flex items-center justify-center">
-                    <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                  </div>
+                  <div className="w-1 h-1 rounded-full bg-current" />
+                  {member.highlight}
                 </div>
-
-                {/* Decorative Element */}
-                <div
-                  className={`absolute top-4 right-4 w-24 h-24 rounded-full transition-all duration-500 ${hoveredIndex === index ? "bg-[#a57c00]/10 scale-150" : "bg-[#a57c00]/5 scale-100"
-                    }`}
-                />
               </div>
             </div>
           ))}

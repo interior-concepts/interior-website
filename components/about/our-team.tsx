@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { Linkedin, Twitter, Mail } from "lucide-react"
+import Image from "next/image"
 
 const teamMembers = [
   {
@@ -71,9 +72,12 @@ export function OurTeam() {
       onMouseLeave={() => setHoveredIndex(null)}
     >
       <div className="relative rounded-2xl overflow-hidden mb-5 aspect-square bg-[#e9e6dd]">
-        <img
+        <Image
           src={member.image || "/placeholder.svg"}
-          alt={member.name}
+          alt={`${member.name}, ${member.role} at Interior Concepts Studio`}
+          fill
+          sizes="(max-width: 640px) 290px, 290px"
+          loading="lazy"
           className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
         />
         <div

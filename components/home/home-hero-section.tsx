@@ -1,9 +1,10 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react"
-import { motion } from "framer-motion"
+import Image from "next/image"
+import { ArrowRight, ArrowUpRight } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
 import { Noto_Serif_Bengali } from "next/font/google"
 
 const notoSerifBengali = Noto_Serif_Bengali({
@@ -13,249 +14,243 @@ const notoSerifBengali = Noto_Serif_Bengali({
 
 const heroSlides = [
   {
-    image: "/banner/Banner6.png",
-    mobileImage: "/mobileBanner/mobileBanner1.jpeg",
-    title: "Designing Spaces That Tell Your Story",
-    subtitle: "Elevate your interior with timeless design and elegant aesthetics.",
+    label: "Residential",
+    title: "Spaces That\nTell Your Story",
+    subtitle:
+      "We craft living spaces that reflect who you are — blending warmth, function, and timeless elegance.",
+    images: [
+      "/bannerinterior/Banner1.jpeg",
+      "/bannerinterior/Banner2.jpeg",
+      "/bannerinterior/Banner4.jpeg",
+      "/bannerinterior/Banner5.jpeg",
+    ],
+    accent: "Living Spaces",
   },
   {
-    image: "/banner/Banner12.png",
-    mobileImage: "/mobileBanner/mobileBanner2.jpeg",
-    title: "Where Elegance Meets Functionality",
-    subtitle: "Transform your vision into beautiful, livable spaces.",
+    label: "Commercial",
+    title: "Where Vision\nMeets Reality",
+    subtitle:
+      "From corporate offices to boutique hospitality — we design environments that inspire productivity and leave lasting impressions.",
+    images: [
+      "/bannerinterior/Banner7.jpeg",
+      "/bannerinterior/Banner10.jpeg",
+      "/bannerinterior/Banner12.jpeg",
+      "/bannerinterior/Banner14.jpeg",
+    ],
+    accent: "Work Spaces",
   },
   {
-    image: "/banner/Banner13.png",
-    mobileImage: "/mobileBanner/mobileBanner3.jpeg",
-    title: "Modern Design for Contemporary Living",
-    subtitle: "Create environments that inspire and comfort.",
-  },
-  {
-    image: "/banner/Banner4.png",
-    mobileImage: "/mobileBanner/mobileBanner4.jpeg",
-    title: "Modern Design for Contemporary Living",
-    subtitle: "Create environments that inspire and comfort.",
-  },
-  {
-    image: "/banner/Banner5.png",
-    mobileImage: "/mobileBanner/mobileBanner1.jpeg",
-    title: "Crafted Interiors with Lasting Impressions",
-    subtitle: "Bring beauty, comfort, and purpose into every corner of your space.",
+    label: "Architectural",
+    title: "Built With\nPurpose & Craft",
+    subtitle:
+      "Every detail matters. Our architectural approach brings structure, beauty, and intention to every square foot.",
+    images: [
+      "/bannerinterior/Banner15.jpeg",
+      "/bannerinterior/Banner18.jpeg",
+      "/bannerinterior/Banner3.jpeg",
+      "/bannerinterior/Banner6.jpeg",
+    ],
+    accent: "Architecture",
   },
 ]
 
-function useCountUp(target: number, duration = 4500, decimals = 0) {
-  const [value, setValue] = useState(0)
-
-  useEffect(() => {
-    let start: number | null = null
-    let frame = 0
-
-    const step = (timestamp: number) => {
-      if (start === null) start = timestamp
-      const progress = Math.min((timestamp - start) / duration, 1)
-      setValue(target * progress)
-      if (progress < 1) {
-        frame = window.requestAnimationFrame(step)
-      }
-    }
-
-    frame = window.requestAnimationFrame(step)
-    return () => window.cancelAnimationFrame(frame)
-  }, [target, duration])
-
-  return value.toFixed(decimals)
-}
-
 export function HomeHeroSection() {
-  const [currentSlide, setCurrentSlide] = useState(0)
-  const [showSiteTitle, setShowSiteTitle] = useState(false)
-  const sectionRef = useRef<HTMLElement | null>(null)
-  const siteTitleTimeout = useRef<number | null>(null)
+  const [current, setCurrent] = useState(0)
+  const slide = heroSlides[current]
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroSlides.length)
-    }, 5000)
-    return () => clearInterval(timer)
+    const t = setInterval(() => setCurrent((p) => (p + 1) % heroSlides.length), 6000)
+    return () => clearInterval(t)
   }, [])
-
-  useEffect(() => {
-    const el = sectionRef.current
-    if (!el) return
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setShowSiteTitle(true)
-            if (siteTitleTimeout.current) {
-              window.clearTimeout(siteTitleTimeout.current)
-            }
-            siteTitleTimeout.current = window.setTimeout(() => {
-              setShowSiteTitle(false)
-              siteTitleTimeout.current = null
-            }, 5000)
-          }
-        })
-      },
-      { threshold: 0.2 }
-    )
-
-    observer.observe(el)
-    return () => {
-      observer.disconnect()
-      if (siteTitleTimeout.current) {
-        window.clearTimeout(siteTitleTimeout.current)
-        siteTitleTimeout.current = null
-      }
-    }
-  }, [])
-
-  const goToSlide = (index: number) => setCurrentSlide(index)
-  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)
-  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % heroSlides.length)
-  const activeSlide = heroSlides[currentSlide]
-  const projectsCount = useCountUp(1000)
-  const yearsCount = useCountUp(10)
-  const ratingCount = useCountUp(4.9, 5200, 1)
 
   return (
-    <section ref={sectionRef} className="relative min-h-screen w-full overflow-hidden pt-20">
-      {heroSlides.map((slide, index) => (
-        <div
-          key={index}
-          className={`absolute inset-0 transition-opacity duration-[1400ms] ${
-            index === currentSlide ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          <picture>
-            <source media="(max-width: 1023px)" srcSet={slide.mobileImage || slide.image || "/placeholder.svg"} />
-            <img
-              src={slide.image || "/placeholder.svg"}
-              alt={slide.title}
-              className={`h-full w-full object-cover transition-transform duration-[7000ms] ${
-                index === currentSlide ? "scale-105" : "scale-100"
-              }`}
-            />
-          </picture>
-          <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/50 to-black/35" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(165,124,0,0.25),transparent_42%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(255,255,255,0.15),transparent_45%)]" />
-        </div>
-      ))}
+    <section className="relative min-h-screen w-full overflow-hidden bg-white pt-20">
 
-      <div className="relative z-10 flex min-h-[calc(100vh-5rem)] items-center">
-        <div className="mx-auto w-full max-w-7xl px-5 pb-14 pt-24 sm:px-6 lg:px-8 lg:py-20">
-          <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={showSiteTitle ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.6 }}
-              className="mb-6 flex items-center justify-center gap-3"
-            >
-              <div className="h-px w-12 bg-[#c89f2f]/80" />
-              <p className="text-xs font-medium uppercase tracking-[0.28em] text-white/90 sm:text-sm">
-                Aesthetic Interior Studio
-              </p>
-              <div className="h-px w-12 bg-[#c89f2f]/80" />
-            </motion.div>
+      {/* ── LEFT + RIGHT split layout ── */}
+      <div className="relative z-10 flex min-h-[calc(100vh-5rem)] flex-col lg:flex-row">
 
-            <motion.p
-              key={`bangla-tag-${currentSlide}`}
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.05, ease: "easeOut" }}
-              className={`${notoSerifBengali.className} mb-4 text-sm font-medium tracking-wide text-[#f2d487] sm:text-base`}
-            >
-              নকশায় আপনার গল্প, ঘরে বাংলার ছোঁয়া
-            </motion.p>
+        {/* ── LEFT PANEL ── */}
+        <div className="flex flex-1 flex-col justify-between px-6 pb-10 pt-12 sm:px-10 lg:max-w-[52%] lg:px-14 lg:pb-16 lg:pt-20 xl:px-20">
 
-            <motion.h1
-              key={`title-${currentSlide}`}
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease: "easeOut" }}
-              className="max-w-3xl font-serif text-[2rem] font-light leading-[1.15] text-white sm:text-5xl lg:text-7xl"
-            >
-              {activeSlide.title}
-            </motion.h1>
-            <motion.p
-              key={`subtitle-${currentSlide}`}
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
-              className="mt-4 max-w-2xl text-sm leading-relaxed text-white/85 sm:mt-5 sm:text-lg lg:text-xl"
-            >
-              {activeSlide.subtitle}
-            </motion.p>
+          {/* Main content */}
+          <div className="mt-4 lg:mt-6">
 
-            <motion.div
-              key={`cta-${currentSlide}`}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
-              className="mt-8 flex w-full flex-col items-center gap-3 sm:mt-9 sm:w-auto sm:flex-row sm:gap-4"
-            >
-              <Link
-                href="#services"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#a57c00] px-7 py-3.5 font-medium text-white transition-all duration-300 hover:bg-[#c99a00] sm:w-auto sm:px-8 sm:py-4"
+            {/* Category label */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`label-${current}`}
+                initial={{ opacity: 0, x: -16 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 16 }}
+                transition={{ duration: 0.4 }}
+                className="mb-4 inline-block"
               >
-                Explore Services
-                <ArrowRight className="h-5 w-5" />
-              </Link>
+                <span className="text-xs font-semibold uppercase tracking-[0.25em] text-[#c89f2f] sm:text-sm">
+                  {slide.label}
+                </span>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Heading */}
+            <AnimatePresence mode="wait">
+              <motion.h1
+                key={`title-${current}`}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="whitespace-pre-line font-serif text-[2.8rem] font-light leading-[1.1] tracking-[-0.01em] text-neutral-900 sm:text-6xl lg:text-[4.8rem] xl:text-[5.8rem]"
+              >
+                {slide.title}
+              </motion.h1>
+            </AnimatePresence>
+
+            {/* Bengali tag */}
+            <div className="my-5">
+              <AnimatePresence mode="wait">
+                <motion.p
+                  key={`accent-${current}`}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.4 }}
+                  className={`${notoSerifBengali.className} text-lg font-medium text-[#c89f2f] sm:text-xl`}
+                >
+                  নকশায় আপনার গল্প, ঘরে বাংলার ছোঁয়া
+                </motion.p>
+              </AnimatePresence>
+            </div>
+
+            {/* Subtitle */}
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={`sub-${current}`}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="max-w-lg text-base leading-relaxed text-neutral-600 sm:text-lg"
+              >
+                {slide.subtitle}
+              </motion.p>
+            </AnimatePresence>
+
+            {/* CTA buttons */}
+            <div className="mt-8 flex flex-wrap gap-4 sm:mt-10">
               <Link
                 href="/contact"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/60 bg-transparent px-7 py-3.5 font-medium text-white transition-all duration-300 hover:bg-white hover:text-[#0d3d3d] sm:w-auto sm:px-8 sm:py-4"
+                className="group inline-flex items-center gap-2.5 rounded-full border border-neutral-900 bg-neutral-900 px-8 py-4 text-xs font-semibold uppercase tracking-wider text-white transition-all duration-300 hover:border-[#c89f2f] hover:bg-[#c89f2f] hover:text-black sm:text-sm"
               >
-                Get Consultation
+                Start Your Project
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
-            </motion.div>
+              <Link
+                href="#services"
+                className="group inline-flex items-center gap-2.5 rounded-full border border-neutral-300 px-8 py-4 text-xs font-semibold uppercase tracking-wider text-neutral-800 transition-all duration-300 hover:border-neutral-900 hover:bg-neutral-900 hover:text-white sm:text-sm"
+              >
+                Explore Work
+                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              </Link>
+            </div>
+          </div>
 
-            <div className="mt-8 grid w-full max-w-2xl grid-cols-1 gap-4 p-0 sm:mt-10 sm:grid-cols-3 sm:gap-5 sm:rounded-2xl sm:border sm:border-white/20 sm:bg-white/10 sm:p-5 sm:backdrop-blur-md">
-              <div>
-                <p className="font-serif text-2xl text-white sm:text-3xl">{projectsCount}+</p>
-                <p className="mt-1 text-[11px] uppercase tracking-wider text-white/75 sm:text-sm">Projects Delivered</p>
-              </div>
-              <div>
-                <p className="font-serif text-2xl text-white sm:text-3xl">{yearsCount}+</p>
-                <p className="mt-1 text-[11px] uppercase tracking-wider text-white/75 sm:text-sm">Years of Experience</p>
-              </div>
-              <div>
-                <p className="font-serif text-2xl text-white sm:text-3xl">{ratingCount}/5</p>
-                <p className="mt-1 text-[11px] uppercase tracking-wider text-white/75 sm:text-sm">Client Satisfaction</p>
-              </div>
+          {/* Bottom — slide dots */}
+          <div className="mt-10 lg:mt-0">
+            <div className="flex items-center gap-4">
+              {heroSlides.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrent(i)}
+                  aria-label={`Go to slide ${i + 1}`}
+                  className="group flex items-center gap-2"
+                >
+                  <span
+                    className={`block h-1 rounded-full transition-all duration-500 ${
+                      i === current ? "w-8 bg-[#c89f2f]" : "w-3 bg-neutral-200 group-hover:bg-neutral-400"
+                    }`}
+                  />
+                  <span
+                    className={`text-xs font-medium transition-colors sm:text-sm ${
+                      i === current ? "text-[#c89f2f]" : "text-neutral-400"
+                    }`}
+                  >
+                    0{i + 1}
+                  </span>
+                </button>
+              ))}
+              <span className="ml-2 text-xs text-neutral-400 sm:text-sm">/ 0{heroSlides.length}</span>
             </div>
           </div>
         </div>
-      </div>
 
-      <button
-        onClick={prevSlide}
-        className="absolute left-4 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/35 bg-white/15 backdrop-blur-md transition-colors hover:bg-[#a57c00] lg:left-8 lg:flex"
-        aria-label="Previous slide"
-      >
-        <ChevronLeft className="h-6 w-6 text-white" />
-      </button>
-      <button
-        onClick={nextSlide}
-        className="absolute right-4 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/35 bg-white/15 backdrop-blur-md transition-colors hover:bg-[#a57c00] lg:right-8 lg:flex"
-        aria-label="Next slide"
-      >
-        <ChevronRight className="h-6 w-6 text-white" />
-      </button>
+        {/* ── DIAGONAL DIVIDER (desktop only) ── */}
+        <div className="pointer-events-none absolute bottom-0 left-[48%] top-0 z-20 hidden w-16 lg:block">
+          <svg className="h-full w-full" preserveAspectRatio="none" viewBox="0 0 64 100">
+            <polygon points="40,0 64,0 24,100 0,100" fill="#ffffff" />
+            <line x1="40" y1="0" x2="0" y2="100" stroke="#c89f2f" strokeWidth="0.5" strokeOpacity="0.4" />
+          </svg>
+        </div>
 
-      <div className="absolute bottom-6 left-1/2 z-20 flex -translate-x-1/2 gap-3 lg:bottom-8">
-        {heroSlides.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => goToSlide(index)}
-            className={`h-2.5 rounded-full transition-all duration-300 ${
-              index === currentSlide ? "w-8 bg-[#c89f2f]" : "w-2.5 bg-white/50 hover:bg-white/70"
-            }`}
-            aria-label={`Go to slide ${index + 1}`}
-          />
-        ))}
+        {/* ── RIGHT PANEL: Image Mosaic ── */}
+        <div className="relative h-[55vw] w-full lg:h-auto lg:flex-1">
+
+          {/* Vertical rotated label */}
+          <div className="absolute right-4 top-1/2 z-30 hidden -translate-y-1/2 rotate-90 lg:block">
+            <AnimatePresence mode="wait">
+              <motion.span
+                key={`vert-${current}`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.4 }}
+                className="text-xs font-semibold uppercase tracking-[0.4em] text-neutral-400"
+              >
+                {slide.accent}
+              </motion.span>
+            </AnimatePresence>
+          </div>
+
+          {/* 2x2 image mosaic */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`grid-${current}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.7 }}
+              className="grid h-full grid-cols-2 grid-rows-2 gap-1.5 p-1.5 pl-8 lg:pl-10"
+            >
+              {slide.images.map((src, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, scale: 1.06 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.8, delay: i * 0.08, ease: "easeOut" }}
+                  className={`relative overflow-hidden ${i === 0 ? "row-span-2" : ""}`}
+                >
+                  <Image
+                    src={src}
+                    alt={`${slide.label} interior design ${i + 1}`}
+                    fill
+                    sizes="(max-width: 1024px) 50vw, 30vw"
+                    priority={i === 0}
+                    className="object-cover transition-transform duration-[8000ms] hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+                </motion.div>
+              ))}
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Gold corner accents */}
+          <div className="pointer-events-none absolute bottom-6 left-14 z-20 hidden lg:block">
+            <div className="h-12 w-12 border-b border-l border-[#c89f2f]/40" />
+          </div>
+          <div className="pointer-events-none absolute right-10 top-10 z-20 hidden lg:block">
+            <div className="h-12 w-12 border-r border-t border-[#c89f2f]/40" />
+          </div>
+        </div>
+
       </div>
     </section>
   )
