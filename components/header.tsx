@@ -62,7 +62,7 @@ export function Header() {
 					<div className="hidden lg:block">
 						<Link href="/contact">
 							<Button className="bg-[#0d3d3d] text-white hover:bg-[#1d4343] rounded-full px-6">
-								Book Consultation
+								Contact Us
 							</Button>
 						</Link>
 					</div>
