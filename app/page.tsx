@@ -46,10 +46,11 @@ export default function HomePage() {
       <TrustFiguresSection />
       <ServicesSection />
       <ProjectSection />
+      <AppointmentSection />
       <PartnersSection />
     
       
-      <AppointmentSection />
+      
       {/* <TestimonialsSection /> */}
       <CtaSection />
     </main>
