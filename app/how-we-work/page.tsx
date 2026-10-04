@@ -1,7 +1,5 @@
 import type { Metadata } from "next"
-import { StagesIntro } from "@/components/how-we-work/stages-intro"
 import { InteractiveProcess } from "@/components/how-we-work/interactive-process"
-import { TeamSection } from "@/components/how-we-work/team-section"
 import { CtaSection } from "@/components/how-we-work/cta-section"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
@@ -141,9 +139,7 @@ export default function HowWeWorkPage() {
     <main className="min-h-screen bg-[#faf9f6] overflow-x-hidden">
       <BreadcrumbJsonLd items={[{ name: "Home", path: "/" }, { name: "How We Work", path: "/how-we-work" }]} />
       <HowWeWorkHero />
-      <StagesIntro />
       <InteractiveProcess stages={stages} />
-      <TeamSection />
       <CtaSection />
     </main>
   )
