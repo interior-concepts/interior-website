@@ -9,10 +9,11 @@ export default function WhatsAppButton() {
 
   const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
 
+  const FaWhatsappIcon = FaWhatsapp as any
+
   return (
     <div>
       
-
       {/* Button */}
      <a
     href={url}
@@ -21,7 +22,7 @@ export default function WhatsAppButton() {
     aria-label="Chat on WhatsApp"
     className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-full shadow-xl transition-all duration-200 hover:scale-105"
   >
-    <FaWhatsapp size={30} />
+    <FaWhatsappIcon size={30} />
     <span className="hidden sm:inline text-sm font-medium">
         Chat with us
     </span>

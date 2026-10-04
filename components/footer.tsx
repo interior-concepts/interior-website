@@ -109,7 +109,7 @@ export function Footer() {
             </p>
             <div className="mt-6 flex gap-4">
               {socialLinks.map((link) => {
-                const IconComponent = link.icon
+                const IconComponent = link.icon as any
                 return (
                   <motion.div
                     key={link.name}
@@ -178,7 +178,7 @@ export function Footer() {
                 whileHover={{ x: 5 }}
                 className="flex items-center gap-3 text-white/70 hover:text-[#a57c00] transition-colors"
               >
-                <FaWhatsapp className="h-5 w-5 text-[#a57c00] flex-shrink-0" />
+                {(() => { const FaWhatsappIcon = FaWhatsapp as any; return <FaWhatsappIcon className="h-5 w-5 text-[#a57c00] flex-shrink-0" />; })()}
                 <span className="text-sm">01334-935532 (WhatsApp)</span>
               </motion.a>
               <motion.a

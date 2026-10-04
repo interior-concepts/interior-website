@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { cuid } from 'cuid';
 
 export async function POST(req: Request) {
   try {

@@ -4,14 +4,15 @@ import { supabaseClient } from '@/lib/supabase-client'
 // PUT — Update Lead
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   const body = await req.json()
 
   const { data, error } = await supabaseClient
     .from('leads')
     .update(body)
-    .eq('id', params.id)
+    .eq('id', id)
     .select()
 
   if (error) {
@@ -24,12 +25,13 @@ export async function PUT(
 // DELETE — Delete Lead
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   const { error } = await supabaseClient
     .from('leads')
     .delete()
-    .eq('id', params.id)
+    .eq('id', id)
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 })
