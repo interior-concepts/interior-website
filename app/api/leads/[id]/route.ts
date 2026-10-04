@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { supabaseClient } from '@/lib/supabase-client'
 
+export const dynamic = 'force-dynamic'
+
 // PUT — Update Lead
 export async function PUT(
   req: Request,

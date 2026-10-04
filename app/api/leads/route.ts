@@ -1,6 +1,8 @@
 import { supabaseServer } from '@/lib/supabase-server'
 import { NextResponse } from 'next/server'
 
+export const dynamic = 'force-dynamic'
+
 
 // GET - Fetch all leads
 export async function GET() {
