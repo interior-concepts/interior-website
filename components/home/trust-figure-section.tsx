@@ -6,11 +6,11 @@ import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 
 const stats = [
-  { value: 10, label: "Years of Experience", suffix: "+" },
-  { value: 350, label: "Client Reviews", suffix: "+" },
-  { value: 600, label: "Projects Completed", suffix: "+" },
-  { value: 98, label: "Client Satisfaction", suffix: "%" },
-  { value: 25, label: "Commercial Spaces", suffix: "+" },
+  { value: 5, label: "Years of Experience", suffix: "+" },
+  { value: 100, label: "Client Reviews", suffix: "+" },
+  { value: 250, label: "Projects Completed", suffix: "+" },
+  { value: 97, label: "Client Satisfaction", suffix: "%" },
+  { value: 10, label: "Commercial Spaces", suffix: "+" },
 ]
 
 function AnimatedCounter({

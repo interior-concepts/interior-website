@@ -385,7 +385,7 @@ export function Portfolio({ projects, portfolioTitle, portfolioSubtitle, portfol
             {[
               { value: "1000+", label: "Projects" },
               { value: "12+", label: "Years" },
-              { value: "98%", label: "Satisfaction" },
+              { value: "97%", label: "Satisfaction" },
             ].map((stat, idx) => (
               <div key={idx} className="text-center">
                 <span className="font-serif text-4xl md:text-5xl text-[#0d3d3d]">

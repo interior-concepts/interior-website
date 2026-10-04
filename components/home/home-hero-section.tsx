@@ -14,36 +14,36 @@ const notoSerifBengali = Noto_Serif_Bengali({
 
 const heroSlides = [
   {
-    label: "Residential",
-    title: "Spaces That\nTell Your Story",
+    label: "Homes",
+    title: "Rooms That\nShare Your Story",
     subtitle:
-      "We craft living spaces that reflect who you are — blending warmth, function, and timeless elegance.",
+      "We design homes that show who you are, with comfort, ease of use, and a style that never fades.",
     images: [
       "/bannerinterior/Banner1.jpeg",
       "/bannerinterior/Banner2.jpeg",
       "/bannerinterior/Banner4.jpeg",
       "/bannerinterior/Banner5.jpeg",
     ],
-    accent: "Living Spaces",
+    accent: "Home Interiors",
   },
   {
-    label: "Commercial",
-    title: "Where Vision\nMeets Reality",
+    label: "Business",
+    title: "Turning Your Ideas\nInto Real Places",
     subtitle:
-      "From corporate offices to boutique hospitality — we design environments that inspire productivity and leave lasting impressions.",
+      "From big offices to small hotels and cafés, we create spaces that help people work well and make a strong first impression.",
     images: [
       "/bannerinterior/Banner7.jpeg",
       "/bannerinterior/Banner10.jpeg",
       "/bannerinterior/Banner12.jpeg",
       "/bannerinterior/Banner14.jpeg",
     ],
-    accent: "Work Spaces",
+    accent: "Workplaces",
   },
   {
-    label: "Architectural",
-    title: "Built With\nPurpose & Craft",
+    label: "Building Design",
+    title: "Made With\nCare & Skill",
     subtitle:
-      "Every detail matters. Our architectural approach brings structure, beauty, and intention to every square foot.",
+      "Small details count. Our design work gives every part of your building a clear plan, a good look, and a reason to be there.",
     images: [
       "/bannerinterior/Banner15.jpeg",
       "/bannerinterior/Banner18.jpeg",
@@ -116,7 +116,7 @@ export function HomeHeroSection() {
                   transition={{ duration: 0.4 }}
                   className={`${notoSerifBengali.className} text-lg font-medium text-[#c89f2f] sm:text-xl`}
                 >
-                  নকশায় আপনার গল্প, ঘরে বাংলার ছোঁয়া
+                  আপনার গল্প আমাদের নকশায়, আপনার ঘরে বাংলার স্পর্শ
                 </motion.p>
               </AnimatePresence>
             </div>
