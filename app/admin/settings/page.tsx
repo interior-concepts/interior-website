@@ -113,15 +113,19 @@ export default function AdminSettingsPage() {
   const fetchBlobs = async () => {
     setIsLoadingBlobs(true)
     try {
-      const res = await fetch("/api/upload")
+      const res = await fetch("/api/upload", { cache: "no-store" })
       if (res.ok) {
         const data = await res.json()
         if (data.blobs) {
           setBlobs(data.blobs)
         }
+      } else {
+        const errData = await res.json().catch(() => ({}))
+        setErrorMsg(errData.error || "Failed to fetch Vercel Blob assets.")
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error fetching blobs:", err)
+      setErrorMsg("Failed to fetch Vercel Blob assets. Please check network connection.")
     } finally {
       setIsLoadingBlobs(false)
     }
@@ -393,6 +397,50 @@ export default function AdminSettingsPage() {
     }
   }
 
+  const handleSyncBlobsToProjects = () => {
+    if (blobs.length === 0) {
+      setErrorMsg("No Blob assets found to sync. Please fetch or upload files first.")
+      setTimeout(() => setErrorMsg(""), 4000)
+      return
+    }
+
+    const imageBlobs = blobs.filter(
+      (b) =>
+        /\.(jpg|jpeg|png|webp|avif|gif|svg)(\?.*)?$/i.test(b.pathname) ||
+        /\.(jpg|jpeg|png|webp|avif|gif|svg)(\?.*)?$/i.test(b.url)
+    )
+
+    if (imageBlobs.length === 0) {
+      setErrorMsg("No image files found in Vercel Blob storage.")
+      setTimeout(() => setErrorMsg(""), 4000)
+      return
+    }
+
+    const createdProjects: Project[] = imageBlobs.map((blob, index) => {
+      const rawName = blob.pathname.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ")
+      const formattedTitle = rawName.charAt(0).toUpperCase() + rawName.slice(1)
+      return {
+        id: index + 1,
+        title: formattedTitle,
+        category: index % 2 === 0 ? "residential" : "commercial",
+        location: "Dhaka, Bangladesh",
+        image: blob.url,
+        galleryImages: [blob.url],
+        description: `Bespoke interior design architecture for ${formattedTitle}.`,
+        fullDescription: `Luxury interior design showcase featuring ${formattedTitle}, hosted on Vercel Blob Cloud Storage.`,
+        clientName: "Private Client",
+        completionYear: "2025",
+        scopeOfWork: ["Space Planning", "Custom Interior", "Lighting Architecture"],
+        featured: index < 4,
+      }
+    })
+
+    setProjects(createdProjects)
+    saveStoredProjects(createdProjects)
+    setSuccessMsg(`Successfully synced ${createdProjects.length} projects from Vercel Blob Storage!`)
+    setTimeout(() => setSuccessMsg(""), 5000)
+  }
+
   const filteredProjects = projects.filter((p) => {
     const matchesSearch =
       p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -440,6 +488,14 @@ export default function AdminSettingsPage() {
                   View Live Site
                 </Button>
               </Link>
+
+              <Button
+                onClick={handleSyncBlobsToProjects}
+                className="bg-[#0d3d3d] border border-[#a57c00]/40 text-[#e6c660] hover:bg-[#1a5a5a] font-medium text-sm px-5 py-6 rounded-full transition-all flex items-center gap-2"
+              >
+                <RefreshCw className="w-4 h-4 text-[#a57c00]" />
+                Sync Blobs to Projects
+              </Button>
 
               <Button
                 onClick={handleClearAllProjects}
@@ -620,6 +676,7 @@ export default function AdminSettingsPage() {
                           alt={project.title}
                           fill
                           className="object-cover group-hover:scale-105 transition-transform duration-700"
+                          unoptimized
                         />
                         <div className="absolute top-4 left-4 bg-[#0d3d3d]/90 backdrop-blur-md border border-white/15 text-white px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider">
                           {project.category}
@@ -777,7 +834,7 @@ export default function AdminSettingsPage() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {blobs.map((blob) => {
-                    const isImage = /\.(jpg|jpeg|png|webp|avif|gif|svg)$/i.test(blob.pathname)
+                    const isImage = /\.(jpg|jpeg|png|webp|avif|gif|svg)(\?.*)?$/i.test(blob.pathname) || /\.(jpg|jpeg|png|webp|avif|gif|svg)(\?.*)?$/i.test(blob.url)
                     return (
                       <div
                         key={blob.url}
@@ -791,6 +848,7 @@ export default function AdminSettingsPage() {
                                 alt={blob.pathname}
                                 fill
                                 className="object-cover"
+                                unoptimized
                               />
                             </div>
                           ) : (
@@ -1019,7 +1077,7 @@ export default function AdminSettingsPage() {
                               isMain ? "border-[#a57c00] ring-2 ring-[#a57c00]/50" : "border-white/10 hover:border-white/30"
                             }`}
                           >
-                            <Image src={imgUrl} alt={`Photo ${index + 1}`} fill className="object-cover" />
+                            <Image src={imgUrl} alt={`Photo ${index + 1}`} fill className="object-cover" unoptimized />
                             
                             {isMain && (
                               <div className="absolute top-1.5 left-1.5 bg-[#a57c00] text-white text-[10px] font-semibold px-2 py-0.5 rounded-full shadow">

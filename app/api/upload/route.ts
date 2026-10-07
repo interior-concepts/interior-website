@@ -1,6 +1,9 @@
 import { put, list, del } from "@vercel/blob"
 import { NextResponse } from "next/server"
 
+export const dynamic = "force-dynamic"
+export const revalidate = 0
+
 export async function POST(request: Request) {
   try {
     const contentType = request.headers.get("content-type") || ""
@@ -14,7 +17,7 @@ export async function POST(request: Request) {
     }
 
     let filename = `upload-${Date.now()}`
-    let fileData: File | Blob | ArrayBuffer | null = null
+    let fileBuffer: Buffer | null = null
 
     if (contentType.includes("multipart/form-data")) {
       const formData = await request.formData()
@@ -23,16 +26,26 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "No file provided in form data" }, { status: 400 })
       }
       filename = file.name || filename
-      fileData = file
+      const arrayBuffer = await file.arrayBuffer()
+      fileBuffer = Buffer.from(arrayBuffer)
     } else {
       const { searchParams } = new URL(request.url)
       filename = searchParams.get("filename") || filename
-      fileData = await request.blob()
+      const arrayBuffer = await request.arrayBuffer()
+      fileBuffer = Buffer.from(arrayBuffer)
     }
 
-    const blob = await put(filename, fileData, {
+    if (!fileBuffer || fileBuffer.length === 0) {
+      return NextResponse.json({ error: "Uploaded file is empty" }, { status: 400 })
+    }
+
+    // Clean up filename to remove invalid characters while preserving extension
+    const cleanFilename = filename.replace(/[^a-zA-Z0-9.\-_]/g, "_")
+
+    const blob = await put(cleanFilename, fileBuffer, {
       access: "public",
       token: token,
+      addRandomSuffix: true,
     })
 
     return NextResponse.json(blob)
@@ -50,13 +63,20 @@ export async function GET() {
     const token = process.env.BLOB_READ_WRITE_TOKEN
     if (!token) {
       return NextResponse.json(
-        { error: "Vercel Blob token missing" },
+        { error: "Vercel Blob token missing in environment variables" },
         { status: 500 }
       )
     }
 
     const { blobs } = await list({ token })
-    return NextResponse.json({ blobs })
+    return NextResponse.json(
+      { blobs },
+      {
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+        },
+      }
+    )
   } catch (error: any) {
     console.error("Blob list error:", error)
     return NextResponse.json(
