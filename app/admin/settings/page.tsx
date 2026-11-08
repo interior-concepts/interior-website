@@ -619,7 +619,7 @@ export default function AdminSettingsPage() {
             }`}
           >
             <CloudUpload className="w-4 h-4 text-[#a57c00]" />
-            <span>Vercel Blob Bucket ({blobs.length})</span>
+            <span>Media Library ({blobs.length})</span>
           </button>
         </div>
 
@@ -757,11 +757,11 @@ export default function AdminSettingsPage() {
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-white/10">
                 <div>
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#a57c00]/15 text-[#e6c660] text-xs font-semibold uppercase tracking-wider mb-2">
-                    Vercel Blob Storage Integration
+                    Global Blob CDN + Neon Postgres Sync
                   </div>
-                  <h2 className="font-serif text-3xl font-light text-white">Cloud Storage Bucket</h2>
+                  <h2 className="font-serif text-3xl font-light text-white">Cloud Media Library</h2>
                   <p className="text-white/60 text-sm font-light mt-1">
-                    Directly upload high-resolution images to Vercel Blob. Copy URLs instantly for use anywhere.
+                    Upload images to Global Blob Storage with instant indexing in Neon PostgreSQL. Delivered globally via CDN.
                   </p>
                 </div>
 

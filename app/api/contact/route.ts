@@ -3,6 +3,14 @@ import { prisma } from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
 
+function serializeBigInt(obj: any) {
+  return JSON.parse(
+    JSON.stringify(obj, (key, value) =>
+      typeof value === 'bigint' ? value.toString() : value
+    )
+  );
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -27,10 +35,7 @@ export async function POST(req: Request) {
     const created = await prisma.contact_leads.create({ data });
     console.log('Created record:', created);
 
-    return NextResponse.json({
-      ...created,
-      created_at: created.created_at.toISOString(),
-    }, { status: 201 });
+    return NextResponse.json(serializeBigInt(created), { status: 201 });
   } catch (error: any) {
     console.error('Contact API Error:', error);
     console.error('Error stack:', error.stack);

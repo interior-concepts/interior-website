@@ -36,3 +36,19 @@ model contact_leads {
   phone      String?
   message    String?
 }
+
+model Media {
+  id          BigInt   @id @default(autoincrement())
+  url         String   @unique
+  pathname    String
+  filename    String
+  contentType String?
+  size        BigInt?
+  title       String?
+  category    String?  @default("general")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([createdAt])
+}
