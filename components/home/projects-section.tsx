@@ -8,7 +8,7 @@ import { ProjectFilter } from "../projects/project-filter"
 import { ProjectCard } from "../projects/project-card"
 import { ProjectDetailModal } from "../projects/project-detail-modal"
 import { Sparkles, ArrowRight, FolderOpen } from "lucide-react"
-import { Project, getStoredProjects } from "@/lib/projects-data"
+import { Project, fetchProjectsFromDatabase, getStoredProjects } from "@/lib/projects-data"
 
 const INITIAL_HOMEPAGE_COUNT = 10
 
@@ -30,8 +30,18 @@ export function ProjectSection() {
   const [activeFilter, setActiveFilter] = useState("all")
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
 
-  const loadProjects = () => {
-    setProjectsList(getStoredProjects())
+  const loadProjects = async () => {
+    const cached = getStoredProjects()
+    if (cached.length > 0) setProjectsList(cached)
+
+    try {
+      const live = await fetchProjectsFromDatabase()
+      if (live && live.length > 0) {
+        setProjectsList(live)
+      }
+    } catch (e) {
+      console.error("Error loading live projects:", e)
+    }
   }
 
   useEffect(() => {

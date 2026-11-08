@@ -7,7 +7,7 @@ import { ProjectCard } from "./project-card"
 import { ProjectDetailModal } from "./project-detail-modal"
 import { Button } from "@/components/ui/button"
 import { ChevronDown, ChevronUp, Search, FolderOpen, Sparkles } from "lucide-react"
-import { Project, getStoredProjects } from "@/lib/projects-data"
+import { Project, fetchProjectsFromDatabase, getStoredProjects } from "@/lib/projects-data"
 
 const INITIAL_DISPLAY_COUNT = 10
 
@@ -32,8 +32,20 @@ export function ProjectGallery() {
   const [showAll, setShowAll] = useState(false)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
 
-  const loadProjects = () => {
-    setProjectsList(getStoredProjects())
+  const loadProjects = async () => {
+    // 1. Initial cached display for instant rendering
+    const cached = getStoredProjects()
+    if (cached.length > 0) setProjectsList(cached)
+
+    // 2. Fetch live single source of truth from Neon PostgreSQL
+    try {
+      const live = await fetchProjectsFromDatabase()
+      if (live && live.length > 0) {
+        setProjectsList(live)
+      }
+    } catch (e) {
+      console.error("Error loading live projects:", e)
+    }
   }
 
   useEffect(() => {

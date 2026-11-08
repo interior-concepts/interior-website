@@ -52,3 +52,24 @@ model Media {
   @@index([category])
   @@index([createdAt])
 }
+
+model Project {
+  id              BigInt   @id @default(autoincrement())
+  title           String
+  category        String
+  location        String   @default("Dhaka, Bangladesh")
+  image           String
+  galleryImages   String[] @default([])
+  description     String
+  fullDescription String?
+  clientName      String?
+  completionYear  String?  @default("2025")
+  scopeOfWork     String[] @default([])
+  featured        Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([category])
+  @@index([featured])
+  @@index([createdAt])
+}

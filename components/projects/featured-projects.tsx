@@ -1,11 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { Project } from "@/lib/projects-data"
 
-const featuredProjects = [
+const DEFAULT_FALLBACK_PROJECTS = [
   {
     id: 1,
     title: "The Modern Family Home",
@@ -45,17 +46,46 @@ const featuredProjects = [
 ]
 
 export function FeaturedProjects() {
+  const [projectsList, setProjectsList] = useState(DEFAULT_FALLBACK_PROJECTS)
   const [currentProject, setCurrentProject] = useState(0)
   const [currentImage, setCurrentImage] = useState(0)
 
-  const project = featuredProjects[currentProject]
+  useEffect(() => {
+    async function loadFeatured() {
+      try {
+        const res = await fetch("/api/projects?featured=true", { cache: "no-store" })
+        if (res.ok) {
+          const data: Project[] = await res.json()
+          if (Array.isArray(data) && data.length > 0) {
+            setProjectsList(
+              data.map((p) => ({
+                id: p.id,
+                title: p.title,
+                location: p.location,
+                type: p.category.charAt(0).toUpperCase() + p.category.slice(1),
+                description: p.description,
+                images:
+                  p.galleryImages && p.galleryImages.length > 0 ? p.galleryImages : [p.image],
+              }))
+            )
+          }
+        }
+      } catch (err) {
+        console.error("Failed loading featured projects:", err)
+      }
+    }
+    loadFeatured()
+  }, [])
+
+  const project = projectsList[currentProject] || projectsList[0] || DEFAULT_FALLBACK_PROJECTS[0]
+  const images = project?.images && project.images.length > 0 ? project.images : ["/placeholder.svg"]
 
   const nextImage = () => {
-    setCurrentImage((prev) => (prev + 1) % project.images.length)
+    setCurrentImage((prev) => (prev + 1) % images.length)
   }
 
   const prevImage = () => {
-    setCurrentImage((prev) => (prev - 1 + project.images.length) % project.images.length)
+    setCurrentImage((prev) => (prev - 1 + images.length) % images.length)
   }
 
   return (
@@ -77,7 +107,7 @@ export function FeaturedProjects() {
           {/* Image Carousel */}
           <div className="relative aspect-[4/3] rounded-xl overflow-hidden group">
             <Image
-              src={project.images[currentImage] || "/placeholder.svg"}
+              src={images[currentImage] || "/placeholder.svg"}
               alt={`${project.title} featured project image`}
               width={1200}
               height={900}
@@ -103,7 +133,7 @@ export function FeaturedProjects() {
 
             {/* Image Indicators */}
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-              {project.images.map((_, idx) => (
+              {images.map((_, idx) => (
                 <button
                   key={idx}
                   onClick={() => setCurrentImage(idx)}
@@ -125,7 +155,7 @@ export function FeaturedProjects() {
 
             {/* Project Selector */}
             <div className="flex flex-wrap gap-3 mt-8">
-              {featuredProjects.map((proj, idx) => (
+              {projectsList.map((proj, idx) => (
                 <button
                   key={proj.id}
                   onClick={() => {

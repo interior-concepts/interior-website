@@ -41,6 +41,9 @@ import {
 import { Button } from "@/components/ui/button"
 import {
   Project,
+  fetchProjectsFromDatabase,
+  saveProjectToDatabase,
+  deleteProjectFromDatabase,
   getStoredProjects,
   saveStoredProjects,
   resetProjectsToDefault,
@@ -106,9 +109,19 @@ export default function AdminSettingsPage() {
   })
 
   useEffect(() => {
-    setProjects(getStoredProjects())
+    fetchProjects()
     fetchBlobs()
   }, [])
+
+  const fetchProjects = async () => {
+    try {
+      const data = await fetchProjectsFromDatabase()
+      setProjects(data)
+    } catch (err) {
+      console.error("Error loading projects:", err)
+      setProjects(getStoredProjects())
+    }
+  }
 
   const fetchBlobs = async () => {
     setIsLoadingBlobs(true)
@@ -317,7 +330,7 @@ export default function AdminSettingsPage() {
     }))
   }
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault()
 
     const scopeArray = formData.scopeOfWorkStr
@@ -325,36 +338,15 @@ export default function AdminSettingsPage() {
       .map((s) => s.trim())
       .filter((s) => s.length > 0)
 
-    const mainCover = formData.image || (formData.galleryImages.length > 0 ? formData.galleryImages[0] : "/placeholder.svg")
-    const fullGallery = formData.galleryImages.length > 0 ? formData.galleryImages : [mainCover]
+    const mainCover =
+      formData.image ||
+      (formData.galleryImages.length > 0 ? formData.galleryImages[0] : "/placeholder.svg")
+    const fullGallery =
+      formData.galleryImages.length > 0 ? formData.galleryImages : [mainCover]
 
-    let updatedList: Project[] = []
-
-    if (editingProject) {
-      updatedList = projects.map((p) => {
-        if (p.id === editingProject.id) {
-          return {
-            ...p,
-            title: formData.title,
-            category: formData.category,
-            location: formData.location,
-            image: mainCover,
-            galleryImages: fullGallery,
-            description: formData.description,
-            fullDescription: formData.fullDescription,
-            clientName: formData.clientName,
-            completionYear: formData.completionYear,
-            scopeOfWork: scopeArray,
-            featured: formData.featured,
-          }
-        }
-        return p
-      })
-      setSuccessMsg(`Project "${formData.title}" updated successfully!`)
-    } else {
-      const newId = projects.length > 0 ? Math.max(...projects.map((p) => p.id)) + 1 : 1
-      const newProj: Project = {
-        id: newId,
+    try {
+      const payload: Partial<Project> = {
+        id: editingProject ? editingProject.id : undefined,
         title: formData.title,
         category: formData.category,
         location: formData.location,
@@ -367,37 +359,59 @@ export default function AdminSettingsPage() {
         scopeOfWork: scopeArray,
         featured: formData.featured,
       }
-      updatedList = [newProj, ...projects]
-      setSuccessMsg(`New project "${formData.title}" created successfully!`)
+
+      await saveProjectToDatabase(payload)
+      await fetchProjects()
+      setIsModalOpen(false)
+      setSuccessMsg(
+        editingProject
+          ? `Project "${formData.title}" updated in Neon database!`
+          : `New project "${formData.title}" saved to Neon database!`
+      )
+    } catch (err: any) {
+      console.error("Save error:", err)
+      setErrorMsg(err.message || "Failed to save project to Neon database.")
+    } finally {
+      setTimeout(() => setSuccessMsg(""), 4000)
     }
-
-    setProjects(updatedList)
-    saveStoredProjects(updatedList)
-    setIsModalOpen(false)
-
-    setTimeout(() => setSuccessMsg(""), 4000)
   }
 
-  const handleDelete = (id: number, title: string) => {
+  const handleDelete = async (id: number, title: string) => {
     if (confirm(`Are you sure you want to delete "${title}"?`)) {
-      const updated = projects.filter((p) => p.id !== id)
-      setProjects(updated)
-      saveStoredProjects(updated)
-      setSuccessMsg(`Project "${title}" deleted successfully.`)
-      setTimeout(() => setSuccessMsg(""), 4000)
+      try {
+        await deleteProjectFromDatabase(id)
+        await fetchProjects()
+        setSuccessMsg(`Project "${title}" deleted from Neon database successfully.`)
+      } catch (err: any) {
+        console.error("Delete error:", err)
+        setErrorMsg(err.message || "Failed to delete project.")
+      } finally {
+        setTimeout(() => setSuccessMsg(""), 4000)
+      }
     }
   }
 
-  const handleClearAllProjects = () => {
-    if (confirm("Are you sure you want to remove ALL projects from the codebase? This action will set project count to 0.")) {
-      const emptyList = resetProjectsToDefault()
-      setProjects(emptyList)
-      setSuccessMsg("All projects removed successfully. Portfolio is now empty.")
-      setTimeout(() => setSuccessMsg(""), 4000)
+  const handleClearAllProjects = async () => {
+    if (
+      confirm(
+        "Are you sure you want to remove ALL projects? This will delete all projects from Neon database."
+      )
+    ) {
+      try {
+        for (const p of projects) {
+          await deleteProjectFromDatabase(p.id)
+        }
+        await fetchProjects()
+        setSuccessMsg("All projects removed successfully. Portfolio is now empty.")
+      } catch (err: any) {
+        setErrorMsg(err.message || "Failed to remove projects.")
+      } finally {
+        setTimeout(() => setSuccessMsg(""), 4000)
+      }
     }
   }
 
-  const handleSyncBlobsToProjects = () => {
+  const handleSyncBlobsToProjects = async () => {
     if (blobs.length === 0) {
       setErrorMsg("No Blob assets found to sync. Please fetch or upload files first.")
       setTimeout(() => setErrorMsg(""), 4000)
@@ -416,29 +430,33 @@ export default function AdminSettingsPage() {
       return
     }
 
-    const createdProjects: Project[] = imageBlobs.map((blob, index) => {
-      const rawName = blob.pathname.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ")
-      const formattedTitle = rawName.charAt(0).toUpperCase() + rawName.slice(1)
-      return {
-        id: index + 1,
-        title: formattedTitle,
-        category: index % 2 === 0 ? "residential" : "commercial",
-        location: "Dhaka, Bangladesh",
-        image: blob.url,
-        galleryImages: [blob.url],
-        description: `Bespoke interior design architecture for ${formattedTitle}.`,
-        fullDescription: `Luxury interior design showcase featuring ${formattedTitle}, hosted on Vercel Blob Cloud Storage.`,
-        clientName: "Private Client",
-        completionYear: "2025",
-        scopeOfWork: ["Space Planning", "Custom Interior", "Lighting Architecture"],
-        featured: index < 4,
+    try {
+      setSuccessMsg("Syncing Blob images into Neon PostgreSQL projects...")
+      for (let index = 0; index < imageBlobs.length; index++) {
+        const blob = imageBlobs[index]
+        const rawName = blob.pathname.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ")
+        const formattedTitle = rawName.charAt(0).toUpperCase() + rawName.slice(1)
+        await saveProjectToDatabase({
+          title: formattedTitle,
+          category: index % 2 === 0 ? "residential" : "commercial",
+          location: "Dhaka, Bangladesh",
+          image: blob.url,
+          galleryImages: [blob.url],
+          description: `Bespoke interior design architecture for ${formattedTitle}.`,
+          fullDescription: `Luxury interior design showcase featuring ${formattedTitle}, hosted on Vercel Blob Cloud Storage and saved in Neon PostgreSQL.`,
+          clientName: "Private Client",
+          completionYear: "2025",
+          scopeOfWork: ["Space Planning", "Custom Interior", "Lighting Architecture"],
+          featured: index < 4,
+        })
       }
-    })
-
-    setProjects(createdProjects)
-    saveStoredProjects(createdProjects)
-    setSuccessMsg(`Successfully synced ${createdProjects.length} projects from Vercel Blob Storage!`)
-    setTimeout(() => setSuccessMsg(""), 5000)
+      await fetchProjects()
+      setSuccessMsg(`Successfully synced ${imageBlobs.length} projects to Neon PostgreSQL!`)
+    } catch (err: any) {
+      setErrorMsg(err.message || "Failed to sync projects to database.")
+    } finally {
+      setTimeout(() => setSuccessMsg(""), 5000)
+    }
   }
 
   const filteredProjects = projects.filter((p) => {
